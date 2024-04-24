@@ -10,7 +10,7 @@ function SignIn() {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-   const [rememberMe, setRememberMe] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
 
   // Clear error message on component mount
@@ -31,10 +31,26 @@ function SignIn() {
       const { token } = response.data;
       localStorage.setItem('Token', token);
       console.log('Login successful! Token:', token);
-         navigate('/dashboard/profile');
+
+      // Check if user has user details
+      const userDetailsResponse = await axios.get('http://localhost:5000/api/detail/getdetail', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!userDetailsResponse.data.firstName || !userDetailsResponse.data) {
+        // User details not found, redirect to fill out details
+        navigate('/userdetails');
+      } else {
+        // User details found, navigate to dashboard/profile
+        navigate('/dashboard/profile');
+      }
     } catch (error) {
       console.log(error);
-      setError('Invalid email or password');
+      if (error.response && error.response.status === 404) {
+        // Axios error with status code 404, navigate to fill out details
+        navigate('/userdetails');
+      } else {
+        setError('Invalid email or password');
+      }
     } finally {
       setIsLoading(false);
     }

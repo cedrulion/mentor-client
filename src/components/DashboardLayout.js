@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
-import { FaBars, FaUser, FaSignOutAlt, FaSortDown } from 'react-icons/fa';
-import Footer from './Footer';
+import { FaBars, } from 'react-icons/fa';
+
 
 const DashboardLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -15,7 +15,7 @@ const DashboardLayout = () => {
   };
 
   const toggleSidebar = () => {
-    setIsSidebarOpen(isSidebarOpen);
+    setIsSidebarOpen(!isSidebarOpen);
   };
 
   const toggleDropdown = () => {
@@ -32,7 +32,11 @@ const DashboardLayout = () => {
       {isSidebarOpen && <Sidebar onClose={toggleSidebar} />}
 
       <div className={`flex-grow ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
-
+      <div className="fixed top-0  p-2">
+          <button className="text-black focus:outline-none text-2xl" onClick={toggleSidebar}>
+            <FaBars  />
+          </button>
+        </div>
         <div className=''>
           <Outlet/>
           </div>

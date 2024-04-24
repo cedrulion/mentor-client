@@ -7,9 +7,7 @@ import SignIn from './components/Auth/SignIn';
 import LandingPage from './components/LandingPage';
 import DashboardLayout from './components/DashboardLayout';
 import Profile from './components/Profile';
-import Appointmentlist from './components/Appointmentlist';
-import Report from './components/Report';
-import Servis from './components/Servis';
+
 import Nav from './components/Nav';
 import UserDetails from './components/Auth/UserDetails';
 import SearchBar from './components/SearchBar';
@@ -37,11 +35,6 @@ function App() {
         <Route  path="/nav" element={<Nav/>} ></Route>
         <Route  path="/userdetails" element={<UserDetails/>} ></Route>
         <Route  path="/match" element={<Matching/>} ></Route>
-      
-       
-        
-       
-       
         
          <Route  path="/dashboard" element={<DashboardLayout/>} >
          <Route  path="requests" element={<MentorRequests/>} />
@@ -49,15 +42,12 @@ function App() {
          <Route  path="resource" element={<Resource/>} />
          <Route  path="uresource" element={<Uresource/>} />
          <Route  path="Discussion" element={<Discussion/>} />
-        <Route  path="question" element={<Question/>} />
          <Route  path="forum" element={<Forum/>} />
+         <Route  path="question" element={<Question/>} />
          <Route  path="profile" element={<Profile/>} />
          <Route  path="Request" element={<Request/>}  />
          <Route  path="track" element={<TrackProgress/>}  />
-         <Route  path="report" element={<Report/>} />
          <Route  path="chat" element={<Chat/>} />
-         <Route  path="approved" element={<Appointmentlist/>} />
-         <Route  path="Servis" element={<Servis/>} />
          <Route  path="matching" element={<Matching/>} />
 
          </Route>
