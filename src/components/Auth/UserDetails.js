@@ -39,7 +39,7 @@ const UserDetails = () => {
       });
       console.log(response.data);
       console.log('Form data submitted successfully:');
-      navigate('/dashboard/profile');
+      navigate('/signin');
     } catch (error) {
       // Handle errors (e.g., show an error message)
       console.error('Error submitting form data:', error);
@@ -47,7 +47,7 @@ const UserDetails = () => {
   };
 
   return (
-    <div className="bg-gradient-to-r from-violet-950 via-black to-orange-800 min-h-screen flex items-center justify-center text-xl">
+    <div className="font-poppins bg-gradient-to-r from-violet-950 via-black to-orange-800 min-h-screen flex items-center justify-center text-xl">
       <div className="text-white">
         {step === 1 && (
           <div>

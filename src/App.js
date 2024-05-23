@@ -20,7 +20,9 @@ import Request from './components/Request';
 import MentorRequests from './components/MentorRequests';
 import Uresource from './components/Uresource';
 import Chat from './components/Chat';
-import TrackProgress from './components/TrackProgress';
+import Track from './components/Track';
+import LeanerRequest from './components/LearnerRequest';
+import LearnerChat from './components/LearnerChat';
 
 
 function App() {
@@ -30,13 +32,13 @@ function App() {
        <Route  path="/" element={<Nav/>} ></Route>
         <Route  path="/signup" element={<SignUp/>} ></Route>
         <Route  path="/signin" element={<SignIn/>} ></Route>
-        
         <Route  path="/landingpage" element={<LandingPage/>} ></Route>
         <Route  path="/nav" element={<Nav/>} ></Route>
         <Route  path="/userdetails" element={<UserDetails/>} ></Route>
         <Route  path="/match" element={<Matching/>} ></Route>
         
          <Route  path="/dashboard" element={<DashboardLayout/>} >
+          
          <Route  path="requests" element={<MentorRequests/>} />
          <Route  path="search" element={<SearchBar/>} />
          <Route  path="resource" element={<Resource/>} />
@@ -46,9 +48,11 @@ function App() {
          <Route  path="question" element={<Question/>} />
          <Route  path="profile" element={<Profile/>} />
          <Route  path="Request" element={<Request/>}  />
-         <Route  path="track" element={<TrackProgress/>}  />
+         <Route  path="track" element={<Track/>}  />
          <Route  path="chat" element={<Chat/>} />
          <Route  path="matching" element={<Matching/>} />
+         <Route  path="status" element={<LeanerRequest/>} />
+         <Route  path="chato" element={<LearnerChat/>} />
 
          </Route>
         </Routes>

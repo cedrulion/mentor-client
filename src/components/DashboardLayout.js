@@ -28,16 +28,16 @@ const DashboardLayout = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-r from-gray-300 to-orange-200 ">
+    <div className="font-poppins flex min-h-screen bg-gradient-to-r from-gray-300 to-orange-200 ">
       {isSidebarOpen && <Sidebar onClose={toggleSidebar} />}
 
-      <div className={`flex-grow ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
-      <div className="fixed top-0  p-2">
+      <div className={`flex-grow ${isSidebarOpen ? 'ml-56' : 'ml-0'}`}>
+      <div className="fixed top-0  pt-2">
           <button className="text-black focus:outline-none text-2xl" onClick={toggleSidebar}>
             <FaBars  />
           </button>
         </div>
-        <div className=''>
+        <div className='font-poppins'>
           <Outlet/>
           </div>
       

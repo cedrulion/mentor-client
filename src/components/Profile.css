@@ -1,0 +1,104 @@
+/* Profile.css */
+
+/* General Modal Styles */
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 90%;
+    padding: 20px;
+    z-index: 1000;
+  }
+  
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    margin-bottom: 20px;
+  }
+  
+  .modal-heading {
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+  
+  .modal-body {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Experience Item Styles */
+  .experience-item {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .experience-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+  
+  .experience-actions {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  /* Profile Field Styles */
+  .profile-details {
+    margin-bottom: 16px;
+  }
+  
+  .profile-field {
+    margin-bottom: 12px;
+  }
+  
+  .profile-field label {
+    font-weight: bold;
+    margin-right: 8px;
+  }
+  
+  .profile-field input,
+  .profile-field textarea {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 100%;
+  }
+  
+  /* Modal Actions Styles */
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .modal-actions button {
+    margin-left: 8px;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .modal-actions button:first-child {
+    background-color: #5f5fc4;
+    color: #ffffff;
+  }
+  
+  .modal-actions button:last-child {
+    background-color: #ff6b6b;
+    color: #ffffff;
+  }
+  

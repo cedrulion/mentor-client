@@ -57,10 +57,11 @@ function SignIn() {
   };
 
   return (
-    <div className="min-h-screen  text-white flex items-center justify-center bg-gradient-to-r from-orange-800 via-black to-violet-800">
-      <Link to="/">
-        <FaArrowLeft className="text-white text-2xl cursor-pointer" />
+    <div className="min-h-screen  text-white flex items-center justify-center bg-gradient-to-r from-orange-800 via-black to-violet-800 font-poppins">
+      <Link to="/" className="absolute top-6 left-6 text-white text-2xl">
+        <FaArrowLeft />
       </Link>
+
       <div className="p-8 rounded-lg shadow-lg text-center max-w-md w-full bg-gray-800 bg-opacity-20">
         <h2 className="text-3xl font-semibold mb-6">Login</h2>
         <form onSubmit={handleSubmit}>
@@ -76,7 +77,7 @@ function SignIn() {
               className="input-field font-bold bg-transparent text-white border-b-2 border-white py-2 px-3"
               required
             />
-            <FaEnvelope className="inline-block top-3 left-3 text-gray-500" />
+            <FaEnvelope className="inline-block top-3 left-3 text-white" />
           </div>
           {/* Password input */}
           <div className="relative mb-4 p-5">
@@ -91,10 +92,10 @@ function SignIn() {
               required
             />
             <div
-              className="absolute top-3 right-9 text-xl cursor-pointer text-gray-500"
+              className="absolute top-6 right-12 text-xl cursor-pointer text-white"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
+              {showPassword ? <FaEyeSlash className="inline-block top-3 left-3 text-white"/> : <FaEye className="inline-block top-3 left-3 text-white"/>}
             </div>
           </div>
           <div className="relative  p-5 mb-4">
@@ -125,7 +126,7 @@ function SignIn() {
         </form>
         {/* Signup link */}
         <div className="mt-4 p-6">
-          <p>Don't have an account?<Link to="/signup">Sign up</Link></p>
+          <p>Don't have an account?<Link to="/signup"><u>Signup</u> </Link></p>
           
         </div>
       </div>

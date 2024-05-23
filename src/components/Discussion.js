@@ -1,37 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Forum from './Forum';
-import { AiOutlinePlus, AiOutlineArrowUp, AiOutlineArrowDown } from 'react-icons/ai'; // Import icons for buttons
+import { AiOutlineArrowUp } from 'react-icons/ai'; // Import upvote icon
+import CommentsModal from './CommentsModal'; // Import the CommentsModal component
 
 function Discussion() {
-  const [status, setStatus] = useState('');
   const [questions, setQuestions] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [message, setMessage] = useState('');
+  const [questionId, setQuestionId] = useState('');
+  const [showComments, setShowComments] = useState({}); // State to track which comments to show
+  const [commentsData, setCommentsData] = useState([]); // State to store comments data
 
   const fetchQuestions = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/questions/view', {
+      const response = await axios.get('http://localhost:5000/api/questions', {
         headers: { Authorization: `Bearer ${localStorage.getItem('Token')}` },
       });
-      setQuestions(response.data); // Assuming the questions array is directly in response.data
+      setQuestions(response.data);
+      // Initialize showComments state based on fetched questions
+      const initialShowComments = {};
+      response.data.forEach((question) => {
+        initialShowComments[question._id] = false; // Initially hide all comments
+      });
+      setShowComments(initialShowComments);
     } catch (error) {
       console.error('Error fetching questions:', error);
     }
   };
-
-  useEffect(() => {
-    const fetchStatus = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/api/request/status', {
-          headers: { Authorization: `Bearer ${localStorage.getItem('Token')}` },
-        });
-        setStatus(response.data.status);
-      } catch (error) {
-        console.error('Error fetching status:', error);
-      }
-    };
-
-    fetchStatus();
-  }, []);
 
   useEffect(() => {
     fetchQuestions(); // Initial fetch when the component mounts
@@ -49,15 +45,38 @@ function Discussion() {
     }
   };
 
-  const handleDownvote = async (questionId) => {
+  const handleShowComments = async (questionId) => {
     try {
-      await axios.put(`http://localhost:5000/api/questions/downvote/${questionId}`, null, {
+      const response = await axios.get(`http://localhost:5000/api/questions/${questionId}/comments`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('Token')}` },
       });
-      // Re-fetch questions after successful downvote
-      fetchQuestions();
+      // Update state to show comments for the clicked question
+      setShowComments((prevShowComments) => ({
+        ...prevShowComments,
+        [questionId]: true, // Show comments for this question
+      }));
+      setCommentsData(response.data); // Store comments data in state
     } catch (error) {
-      console.error('Error downvoting question:', error);
+      console.error('Error fetching comments:', error);
+    }
+  };
+
+  const handleCommentSubmit = async () => {
+    try {
+      await axios.put(
+        `http://localhost:5000/api/questions/comment/${questionId}`,
+        { comment: message },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem('Token')}` },
+        }
+      );
+      // Re-fetch questions after successful comment submission
+      fetchQuestions();
+      // Close the modal and reset comment input
+      setShowModal(false);
+      setMessage('');
+    } catch (error) {
+      console.error('Error submitting comment:', error);
     }
   };
 
@@ -67,7 +86,6 @@ function Discussion() {
         <Forum />
         {questions.length > 0 && (
           <div>
-      
             <ul className='grid grid-rows-1 sm:grid-rows-2 md:grid-rows-4 gap-4 mt-5'>
               {questions.map((question) => (
                 <li className='bg-gray-100 shadow-md rounded-lg p-4' key={question._id}>
@@ -77,19 +95,59 @@ function Discussion() {
                       <button className='bg-gray-500 text-white px-2 py-1 rounded-md' onClick={() => handleUpvote(question._id)}>
                         <AiOutlineArrowUp /> Votes
                       </button>
+                      <button
+                        className='bg-gray-500 text-white px-2 py-1 rounded-md ml-2'
+                        onClick={() => handleShowComments(question._id)}
+                      >
+                        {showComments[question._id] ? 'Hide Comments' : 'View Comments'}
+                      </button>
+                      {/* Add button to toggle comment modal */}
+                      <button
+                        className='bg-gray-500 text-white px-2 py-1 rounded-md ml-2'
+                        onClick={() => {
+                          setShowModal(true);
+                          setQuestionId(question._id.toString()); // Convert to string before setting
+                        }}
+                      >
+                        Add Comment
+                      </button>
                     </div>
                     <div className='bg-white p-2 w-full text-xl font-serif font-extrabold'>
                       {question.message} <br />
-                     <p className='text-sm text-gray-700'> by {question.learnerFirstName}</p> 
+                      <p className='text-sm text-gray-700'> by {question.learnerFirstName}</p>
                     </div>
-                    
                   </div>
+                  {/* Render comments if available and show/hide based on state */}
+                  {showComments[question._id] && question.comments && (
+                    <CommentsModal comments={commentsData} onClose={() => setShowComments({ ...showComments, [question._id]: false })} />
+                  )}
                 </li>
               ))}
             </ul>
           </div>
         )}
       </div>
+      {/* Comment Modal */}
+      {showModal && (
+        <div className='fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50'>
+          <div className='bg-white p-4 rounded-lg'>
+            <textarea
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder='Enter your comment...'
+              className='w-full h-32 p-2 border border-gray-300 rounded-md resize-none'
+            ></textarea>
+            <div className='flex justify-end mt-2'>
+              <button className='bg-blue-500 text-white px-4 py-2 rounded-md mr-2' onClick={handleCommentSubmit}>
+                Submit
+              </button>
+              <button className='bg-gray-500 text-white px-4 py-2 rounded-md' onClick={() => setShowModal(false)}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

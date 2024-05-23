@@ -64,7 +64,7 @@ const SignUp = () => {
 
 
   return (
-    <div className="min-h-screen flex text-white items-center justify-center bg-gradient-to-r from-orange-700 to-violet-900">
+    <div className="min-h-screen flex text-white items-center justify-center bg-gradient-to-r from-orange-700 to-violet-900 font-poppins">
       <Link to="/signin" className="absolute top-6 left-6 text-white text-2xl">
         <FaArrowLeft />
       </Link>

@@ -8,7 +8,8 @@ module.exports = {
       fontFamily:{
         Ubuntu:['Ubuntu'],
         Interi:['Inter'],
-        Roboto:['Roboto']
+        Roboto:['Roboto'],
+        poppins: ['Poppins', 'sans-serif'],
       }
     },
   },

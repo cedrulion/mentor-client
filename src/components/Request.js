@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaUserPlus, FaSearch, FaUser } from 'react-icons/fa';
 import { FiUser } from 'react-icons/fi';
+import LOGO from "../Assets/loading.gif";
 
 const Request = () => {
   const [classType, setClassType] = useState('');
@@ -11,7 +12,8 @@ const Request = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedUser, setSelectedUser] = useState(null);
   const [ignoredMentors, setIgnoredMentors] = useState([]);
-  const [showConfirmationModal, setShowConfirmationModal] = useState(false); // New state for modal
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [userExperiences, setUserExperiences] = useState([]); // New state for user experiences
   const token = localStorage.getItem('Token');
 
   useEffect(() => {
@@ -49,16 +51,14 @@ const Request = () => {
     try {
       const response = await axios.post(
         `http://localhost:5000/api/requests/${mentorId}`,
-        { classType, classTime }, // Include classType and classTime in the request body
+        { classType, classTime },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
       console.log('Request sent successfully:', response.data);
-      // Optionally, you can update state or show a notification on successful request
     } catch (error) {
       console.error('Error sending request:', error);
-      // Handle error (e.g., show error message to user)
     }
   };
 
@@ -68,9 +68,10 @@ const Request = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setSelectedUser(response.data);
+
+      fetchUserExperiences(userId); // Fetch user experiences when user is selected
     } catch (error) {
       console.error('Error fetching user detail:', error);
-      // Handle error (e.g., show error message to user)
     }
   };
 
@@ -78,8 +79,20 @@ const Request = () => {
     setIgnoredMentors([...ignoredMentors, mentorId]);
   };
 
+  const fetchUserExperiences = async (userId) => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/experience/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUserExperiences(response.data.data);
+      console.log(response.data.data);
+    } catch (error) {
+      console.error('Error fetching user experiences:', error);
+    }
+  };
+
   const ConfirmationModal = ({ onCancel, onConfirm }) => (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 font-Interi">
       <div className="bg-white p-4 rounded-md shadow-md">
         <p className="mb-4">Are you sure you want to send the request?</p>
         <div className="flex justify-end">
@@ -95,11 +108,11 @@ const Request = () => {
   );
 
   if (loading) {
-    return <p>Loading...</p>;
+    return  <div className="min-h-screen  bg-gradient-to-r from-gray-300 to-orange-200 flex items-center justify-center"><img src={LOGO} alt="logo"  /></div>;
   }
 
   return (
-    <div className="p-4 min-h-screen bg-gray-200">
+    <div className="p-4 min-h-screen bg-gray-200 font-Interi">
       <div className="m-6 bg-transparent flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4">
         <button className="font-bold py-2 px-4 rounded">
           <FaUserPlus className="fill-current text-2xl mr-1" />
@@ -117,7 +130,7 @@ const Request = () => {
         </div>
       </div>
       {selectedUser ? (
-        <div className=" bg-gradient-to-r from-gray-500 to-orange-300 h-screen rounded-md shadow-md p-4">
+        <div className="bg-gradient-to-r from-gray-500 to-orange-300 h-screen rounded-md shadow-md p-4">
           <div className="flex flex-col items-center">
             <div className="flex cursor-pointer">
               <FiUser className="text-gray-900 rounded-lg text-6xl text-center" />
@@ -128,6 +141,28 @@ const Request = () => {
             <p className="text-lg">
               {selectedUser.studyField}, {selectedUser.school}
             </p>
+            {selectedUser && (
+        <div className='w-full'>
+          <h2 className="text-3xl font-bold mt-4 text-red-800">About</h2>
+          <h2 className="text-xl font-bold mt-4">Experience</h2>
+          {userExperiences.length > 0 ? (
+            <div className="grid grid-cols-1 gap-4 mt-4"> {/* Changed to single column grid */}
+              {userExperiences.map((experience) => (
+                <div key={experience._id} className="bg-gray-200 p-4 rounded-md shadow w-1/5">
+                  <h3 className="text-lg font-semibold">{experience.title}</h3>
+                  <p className="text-sm font-bold">{experience.description}</p>
+                  <p className="text-xs mt-2 ">
+                    {new Date(experience.startDate).toLocaleDateString()} -{' '}
+                    {new Date(experience.endDate).toLocaleDateString()}
+                  </p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-lg text-center text-gray-800">No experiences found.</p>
+          )}
+        </div>
+      )}
             <div className="grid grid-cols-2 gap-4 mt-8">
               <div>
                 <label htmlFor="classType" className="text-lg font-semibold">
@@ -160,48 +195,51 @@ const Request = () => {
               </div>
             </div>
             <button
-              className=" bg-gradient-to-r from-violet-800 to-orange-800 py-2 px-8 text-lg rounded-md text-white mt-11 font-semibold"
-              onClick={() => setShowConfirmationModal(true)} // Open modal on button click
+              className="bg-gradient-to-r from-violet-800 to-orange-800 py-2 px-8 text-lg rounded-md text-white mt-11 font-semibold"
+              onClick={() => setShowConfirmationModal(true)}
             >
               Request Session
             </button>
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-5 bg-gray-200 rounded-md shadow-md overflow-hidden">
-          <div>
-            <h1 className="flex justify-center font-bold text-xl text-red-700">BEST MATCHES</h1>
-            {filteredMentors.map((mentor) => (
-              <div key={mentor._id} className="hover:bg-orange-200">
-                <div className="p-6 flex gap-3 ">
-                  <FaUser className="ml-9 text-orange-300 z-10 rounded-full p-1 text-5xl bg-yellow-900" />
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                    {mentor.firstName} {mentor.lastName}
-                  </h3>
-                </div>
-                <div className="ml-20 flex gap-6 text-white">
-                  <button className="bg-orange-900 py-2 px-3 rounded-md" onClick={() => viewDetail(mentor.user)}>
-                    Request
-                  </button>
-                  <button className="bg-orange-900 py-2 px-3 rounded-md" onClick={() => ignoreMentor(mentor.user)}>
-                    Ignore
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+        <div className="min-h-screen bg-gray-200 rounded-md shadow-md overflow-hidden">
+  <h1 className="flex justify-center font-bold text-xl text-red-700 font-poppins">BEST MATCHES</h1>
+  <div className="grid grid-cols-3 gap-4 p-4">
+    {filteredMentors.map((mentor) => (
+      <div key={mentor._id} className="hover:bg-orange-200 p-4 rounded-lg shadow-md bg-white">
+        <div className="flex items-center gap-3 mb-4">
+          <FaUser className="text-orange-300 text-5xl bg-yellow-900 p-1 rounded-full" />
+          <h3 className="text-lg font-semibold text-gray-800">
+            {mentor.firstName} {mentor.lastName}
+          </h3>
         </div>
+        <div className="flex justify-center gap-6 text-white">
+          <button className="bg-orange-900 py-2 px-3 rounded-md" onClick={() => viewDetail(mentor.user)}>
+            Request
+          </button>
+          <button className="bg-orange-900 py-2 px-3 rounded-md" onClick={() => ignoreMentor(mentor.user)}>
+            Ignore
+          </button>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+      
+      
       )}
-      {/* Render confirmation modal if showConfirmationModal is true */}
       {showConfirmationModal && (
         <ConfirmationModal
-          onCancel={() => setShowConfirmationModal(false)} // Close modal on cancel
+          onCancel={() => setShowConfirmationModal(false)}
           onConfirm={() => {
-            setShowConfirmationModal(false); // Close modal
-            sendRequest(selectedUser.user); // Send request
+            setShowConfirmationModal(false);
+            sendRequest(selectedUser.user);
           }}
         />
       )}
+      
     </div>
   );
 };

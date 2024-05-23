@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaUserPlus, FaSearch, FaUser } from 'react-icons/fa';
+import LOGO from "../Assets/loading.gif";
 
 const MentorRequests = () => {
   const [requests, setRequests] = useState([]);
@@ -43,13 +44,13 @@ const MentorRequests = () => {
   };
 
   if (loading) {
-    return <p>Loading...</p>;
+    return  <div className="min-h-screen  bg-gradient-to-r from-gray-300 to-orange-200 flex items-center justify-center"><img src={LOGO} alt="logo"  /></div>;
   }
 
   return (
     <div className="p-4 min-h-screen bg-gradient-to-r from-gray-300 to-orange-200">
       <div className="m-6 bg-transparent flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4">
-        <div className="text-2xl font-bold py-2 px-4 rounded">Requests</div>
+        <div className="text-2xl font-bold py-2 px-4 rounded">Requested Learner</div>
       </div>
       {requests.length === 0 ? (
         <div className="text-center text-gray-800 font-semibold">No requests available</div>

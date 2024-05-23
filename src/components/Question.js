@@ -3,25 +3,9 @@ import axios from 'axios';
 import Forum from './Forum';
 
 function Question() {
-  const [status, setStatus] = useState('');
   const [questionText, setQuestionText] = useState('');
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(false); // Add loading state
-
-  useEffect(() => {
-    const fetchStatus = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/api/request/status', {
-          headers: { Authorization: `Bearer ${localStorage.getItem('Token')}` },
-        });
-        setStatus(response.data.status);
-      } catch (error) {
-        console.error('Error fetching status:', error);
-      }
-    };
-
-    fetchStatus();
-  }, []);
 
   const handleQuestionChange = (event) => {
     setQuestionText(event.target.value);
@@ -30,7 +14,7 @@ function Question() {
   const handleSendQuestion = async () => {
     setLoading(true); // Set loading state while sending question
     try {
-      await axios.post('http://localhost:5000/api/questions/ask', { message: questionText }, {
+      await axios.post('http://localhost:5000/api/questions/ask/general', { message: questionText }, {
         headers: { Authorization: `Bearer ${localStorage.getItem('Token')}` },
       });
       console.log('Question sent successfully');
@@ -47,7 +31,7 @@ function Question() {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/questions/view', {
+        const response = await axios.get('http://localhost:5000/api/questions', {
           headers: { Authorization: `Bearer ${localStorage.getItem('Token')}` },
         });
         setQuestions(response.data);
@@ -78,22 +62,16 @@ function Question() {
       <Forum />
       <div className="h-screen bg-gradient-to-r from-gray-300 to-orange-200 p-6">
         <div className="flex justify-between mb-6">
-          {status === 'accepted' ? (
-            <>
-              <input
-                type="text"
-                placeholder="Ask a question..."
-                value={questionText}
-                onChange={handleQuestionChange}
-                className="p-2 rounded-md w-3/4 bg-gray-100"
-              />
-              <button className="bg-amber-600 py-3 px-8 rounded-md text-white" onClick={handleSendQuestion}>
-                {loading ? 'Sending...' : 'Send'}
-              </button>
-            </>
-          ) : (
-            <p className="text-gray-800">Your request is not accepted yet. Status: {status}</p>
-          )}
+          <input
+            type="text"
+            placeholder="Ask a question..."
+            value={questionText}
+            onChange={handleQuestionChange}
+            className="p-2 rounded-md w-3/4 bg-gray-100"
+          />
+          <button className="bg-amber-600 py-3 px-8 rounded-md text-white" onClick={handleSendQuestion}>
+            {loading ? 'Sending...' : 'Send'}
+          </button>
         </div>
         {frequentQuestions.length > 0 && (
           <>

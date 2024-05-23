@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaComments, FaBell, FaHome, FaCalendarAlt } from 'react-icons/fa';
+import { FaComments, FaBookmark, FaHome, FaCalendarAlt } from 'react-icons/fa';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserGroup } from '@fortawesome/free-solid-svg-icons';
@@ -43,38 +43,38 @@ const Sidebar = ({ onClose }) => {
               onClick={() => handleItemClick('/dashboard/profile')}
               className="flex items-center space-x-2"
             >
-              <FaHome className="text-xl" />
-              <span className="text-lg">Profile</span>
+              <FaHome className="text-3xl" />
+              
             </Link>
           </li>
-          <li className="p-3  bg-gradient-to-r from-orange-500 to-violet-900 hover:text-white">
+          <li className="p-5  hover:bg-gradient-to-r from-orange-500 to-violet-900 hover:text-white">
           <Link
             to="/dashboard/requests"
             onClick={() => handleItemClick('/dashboard/requests')}
             className="flex items-center space-x-2"
           >
-            <FontAwesomeIcon icon={faUserGroup} size="lg" className="fill-current text-xl " />
-            <span className="text-lg">Requested Learner</span>
+            <FontAwesomeIcon icon={faUserGroup} size="lg" className="fill-current text-3xl " />
+           
           </Link>
         </li>
-        <li className="p-3 hover:bg-gradient-to-r from-orange-500 to-violet-900 hover:text-white">
+        <li className="p-5 hover:bg-gradient-to-r from-orange-500 to-violet-900 hover:text-white">
             <Link
               to="/dashboard/chat"
               onClick={() => handleItemClick('/dashboard/chat')}
               className="flex items-center space-x-2"
             >
-              <FaComments className="text-xl" />
-              <span className="text-lg">Chat</span>
+              <FaComments className="text-3xl" />
+              
             </Link>
           </li>
-          <li className="p-3  bg-gradient-to-r from-orange-500 to-violet-900 hover:text-white">
+          <li className="p-5  hover:bg-gradient-to-r from-orange-500 to-violet-900 hover:text-white">
           <Link
             to="/dashboard/resource"
             onClick={() => handleItemClick('/dashboard/resource')}
             className="flex items-center space-x-2"
           >
-            <FontAwesomeIcon icon={faUserGroup} size="lg" className="fill-current text-xl " />
-            <span className="text-lg">Forum</span>
+            <FaBookmark className="text-3xl" />
+            
           </Link>
         </li>
         </>
@@ -114,11 +114,21 @@ const Sidebar = ({ onClose }) => {
         </li>
         <li className="p-3  hover:bg-gradient-to-r from-orange-500 to-violet-900 hover:text-white">
         <Link
+          to="/dashboard/status"
+          onClick={() => handleItemClick('/dashboard/status')}
+          className="flex items-center space-x-2"
+        >
+          <FontAwesomeIcon icon={faUserGroup} size="lg" className=" text-xl " />
+          <span className="text-lg">View Requests</span>
+        </Link>
+      </li>
+        <li className="p-3  hover:bg-gradient-to-r from-orange-500 to-violet-900 hover:text-white">
+        <Link
           to="/dashboard/track"
           onClick={() => handleItemClick('/dashboard/track')}
           className="flex items-center space-x-2"
         >
-          <FontAwesomeIcon icon={faUserGroup} size="lg" className=" text-xl " />
+         <FaBookmark className="text-3xl" />
           <span className="text-lg">Tracking</span>
         </Link>
       </li>
@@ -130,7 +140,7 @@ const Sidebar = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed top-0 bottom-0 left-0 w-56 bg-gradient-to-r from-orange-500 to-violet-900 text-white text-center">
+    <div className="font-poppins fixed top-0 bottom-0 left-0 w-56 bg-gradient-to-r from-orange-500 to-violet-900 text-white text-center">
       <div className="">
         {userDetail && <p className="text-lg font-semibold mb-4">{userDetail.firstName} {userDetail.lastName}</p>}
         <ul className="space-y-1 pt-32 flex justify-center items-center flex-col">{renderMenuItems()}</ul>

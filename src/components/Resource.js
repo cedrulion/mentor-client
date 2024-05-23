@@ -5,6 +5,7 @@ import Modal from './Modal';
 
 function Resource() {
   const [title, setTitle] = useState('');
+  const [date, setDate] = useState('');
   const [description, setDescription] = useState('');
   const [type, setType] = useState('Webinar');
   const [file, setFile] = useState(null);
@@ -56,6 +57,7 @@ function Resource() {
 
     const formData = new FormData();
     formData.append('title', title);
+    formData.append('date', date);
     formData.append('description', description);
     formData.append('type', type);
     formData.append('file', file);
@@ -66,6 +68,7 @@ function Resource() {
         'Content-Type': 'multipart/form-data',
       });
       setTitle('');
+      setDate('');
       setDescription('');
       setType('Webinar');
       setFile(null);
@@ -136,10 +139,10 @@ function Resource() {
   return (
     <div>
       <Forum />
-      <div className='min-h-screen bg-gradient-to-r from-slate-300 to-orange-200'>
-        <div className='container mx-auto py-8'>
+      <div className=' bg-gradient-to-r from-slate-300 to-orange-200 px-9 '>
+        <div className=' py-3'>
           <p className='text-center text-xl'>Explore the wealth of information, tools, and insights curated to enhance your skills, knowledge, and career development</p>
-          <div className='flex justify-center gap-8 pt-6 text-2xl'>
+          <div className='flex justify-center gap-8 pt-3 text-2xl'>
             <h1 className='py-2 px-4'>Content Types</h1>
             <button className={`bg-yellow-200 py-2 px-4 ${filterType === '' ? 'font-bold' : ''}`} onClick={() => setFilterType('')}>All</button>
             <button className={`bg-yellow-200 py-2 px-4 ${filterType === 'Webinar' ? 'font-bold' : ''}`} onClick={() => setFilterType('Webinar')}>Webinar</button>
@@ -148,10 +151,13 @@ function Resource() {
             <button className={`bg-yellow-200 py-2 px-4 ${filterType === 'Article' ? 'font-bold' : ''}`} onClick={() => setFilterType('Article')}>Articles</button>
           </div>
 
-          <form onSubmit={handleSubmit} className='mt-8'>
+          <form onSubmit={handleSubmit} className='mt-3'>
+            <h1 className=' text-lg font-bold'>Adding New Resources</h1>
             <div className='grid grid-cols-2 gap-4'>
               <label>Title:</label>
               <input type='text' value={title} onChange={(e) => setTitle(e.target.value)} required className='border border-gray-300 rounded-md p-2' />
+              <label>Date:</label>
+              <input type='datetime-local' value={date} onChange={(e) => setDate(e.target.value)} required className='bg-white py-2 px-3 rounded-md w-full' />
               <label>Description:</label>
               <input type='text' value={description} onChange={(e) => setDescription(e.target.value)} required className='border border-gray-300 rounded-md p-2' />
               <label>Type:</label>
@@ -173,22 +179,19 @@ function Resource() {
           {loading && <p className='text-center mt-4'>Loading...</p>}
           {error && <p className='text-center text-red-500 mt-4'>{error}</p>}
 
-          <div className='mt-8'>
-            <h2 className='text-2xl'>Resources:</h2>
-            <ul className='mt-4 flex justify-between'>
-              {resources
-                .filter(resource => filterType === '' || resource.type === filterType)
-                .map((resource) => (
-                  <li key={resource._id} className='border border-gray-300 rounded-md p-4 mb-4 '>
-                    <p>Title: {resource.title}</p>
-                    <p>Description: {resource.description}</p>
-                    <p>Type: {resource.type}</p>
-                    <div className="flex justify-between items-center mt-2">
-                      <button onClick={() => handleDelete(resource._id)} className='bg-red-500 text-white px-3 py-1 rounded-md'>Delete</button>
-                      <button onClick={() => handleLearnMore(resource)} className='bg-green-500 text-white px-3 py-1 rounded-md'>Learn More</button>
-                    </div>
-                    {/* Render additional resource details or preview */}
-                
+          <div className='mt-2'>
+          <ul className='mt-2 grid grid-cols-3 gap-3'>
+      {resources
+        .filter(resource => filterType === '' || resource.type === filterType)
+        .map((resource) => (
+          <li key={resource._id} className='bg-gray-200 border border-gray-300 rounded-md p-2 mb-2'>
+            <span className='bg-orange-300 text-red-800 rounded-lg p-1'>{resource.type}</span>
+            <p className='font-bold  pt-5 text-2xl break-words'>{resource.title}</p>
+            <p className='break-words whitespace-normal'>{resource.description}</p>
+            <p className='break-words whitespace-normal'>{resource.date}</p>
+          <button onClick={() => handleDelete(resource._id)} className='bg-red-500 text-white px-3 py-1 rounded-md'>Delete</button>
+        <button onClick={() => handleLearnMore(resource)} className='bg-green-500 text-white px-3 py-1 rounded-md'>Learn More</button>
+                    
                   </li>
                 ))}
             </ul>

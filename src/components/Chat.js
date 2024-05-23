@@ -114,10 +114,10 @@ const Chat = () => {
   };
 
   return (
-    <ChatContainer>
+    <ChatContainer className='p-9 m-9 font-Interi text-xl'>
       <h1 className="text-2xl font-bold mb-4 text-center">Chat with Learners</h1>
       {questions.map((question) => (
-        <QuestionWrapper key={question._id}>
+        <QuestionWrapper key={question._id} className='p-9 m-9'>
           <p>{question.message}</p>
           <p><strong>From:</strong> {question.learnerFirstName}</p>
           {expandedQuestionId === question._id ? (
