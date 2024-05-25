@@ -23,6 +23,7 @@ import Chat from './components/Chat';
 import Track from './components/Track';
 import LeanerRequest from './components/LearnerRequest';
 import LearnerChat from './components/LearnerChat';
+import Close from './components/Close';
 
 
 function App() {
@@ -48,6 +49,7 @@ function App() {
          <Route  path="question" element={<Question/>} />
          <Route  path="profile" element={<Profile/>} />
          <Route  path="Request" element={<Request/>}  />
+         <Route  path="Close" element={<Close/>}  />
          <Route  path="track" element={<Track/>}  />
          <Route  path="chat" element={<Chat/>} />
          <Route  path="matching" element={<Matching/>} />

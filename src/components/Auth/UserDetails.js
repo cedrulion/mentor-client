@@ -39,7 +39,7 @@ const UserDetails = () => {
       });
       console.log(response.data);
       console.log('Form data submitted successfully:');
-      navigate('/signin');
+      navigate('/dashboard/profile');
     } catch (error) {
       // Handle errors (e.g., show an error message)
       console.error('Error submitting form data:', error);

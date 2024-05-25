@@ -31,10 +31,10 @@ const Track = () => {
   }));
 
   const attendanceSummary = {
-    inPerson: requests.filter(req => req.classType === 'in person').length,
+    inperson: requests.filter(req => req.classType === 'inperson').length,
     online: requests.filter(req => req.classType === 'online').length,
     workshops: requests.filter(req => req.classType === 'workshops').length,
-    oneOnOne: requests.filter(req => req.classType === 'one-on-one').length,
+    oneonone: requests.filter(req => req.classType === 'oneonone').length,
   };
 
   if (loading) {
@@ -95,7 +95,7 @@ const Track = () => {
           <h2 className="text-xl font-semibold mb-2">Total number of attendances: {requests.length}</h2>
           <ul className="space-y-2">
             <li className="flex items-center">
-              <span className="w-4 h-4 bg-orange-500 rounded-full mr-2"></span> In person: {attendanceSummary.inPerson}
+              <span className="w-4 h-4 bg-orange-500 rounded-full mr-2"></span> In person: {attendanceSummary.inperson}
             </li>
             <li className="flex items-center">
               <span className="w-4 h-4 bg-yellow-500 rounded-full mr-2"></span> Online: {attendanceSummary.online}
@@ -104,7 +104,7 @@ const Track = () => {
               <span className="w-4 h-4 bg-blue-500 rounded-full mr-2"></span> Workshops: {attendanceSummary.workshops}
             </li>
             <li className="flex items-center">
-              <span className="w-4 h-4 bg-teal-500 rounded-full mr-2"></span> One-on-One: {attendanceSummary.oneOnOne}
+              <span className="w-4 h-4 bg-teal-500 rounded-full mr-2"></span> One-on-One: {attendanceSummary.oneonone}
             </li>
           </ul>
         </div>

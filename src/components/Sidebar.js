@@ -77,6 +77,16 @@ const Sidebar = ({ onClose }) => {
             
           </Link>
         </li>
+      <li className="pt-12  hover:bg-gradient-to-r from-orange-500 to-violet-900         hover:text-white">
+        <Link
+          to="/signin"
+          onClick={() => handleItemClick('/signin')}
+          className="flex items-center space-x-2"
+        >
+      
+          <span className="text-lg">Logout</span>
+        </Link>
+      </li>
         </>
       );
     } else if (userRole === 'learner') {
@@ -130,6 +140,16 @@ const Sidebar = ({ onClose }) => {
         >
          <FaBookmark className="text-3xl" />
           <span className="text-lg">Tracking</span>
+        </Link>
+      </li>
+      <li className="pt-12 hover:bg-gradient-to-r from-orange-500 to-violet-900 hover:text-white">
+        <Link
+          to="/signin"
+          onClick={() => handleItemClick('/signin')}
+          className="flex items-center space-x-2"
+        >
+         
+          <span className="text-lg">Logout</span>
         </Link>
       </li>
         </>

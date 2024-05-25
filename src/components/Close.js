@@ -4,7 +4,7 @@ import { FaUserPlus, FaSearch, FaUser, FaArrowRight } from 'react-icons/fa';
 import { FiUser } from 'react-icons/fi';
 import LOGO from "../Assets/loading.gif";
 
-const Request = () => {
+const Close = () => {
   const [classType, setClassType] = useState('');
   const [classTime, setClassTime] = useState('');
   const [mentors, setMentors] = useState([]);
@@ -49,9 +49,9 @@ const Request = () => {
 
   const filteredMentors = mentors.filter(
     (mentor) =>
-      mentor.studyField.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      mentor.city.toLowerCase().includes(searchTerm.toLowerCase()) &&
       !ignoredMentors.includes(mentor.user) &&
-      loggedInUser && mentor.studyField === loggedInUser.studyField // Matching studyField
+      loggedInUser && mentor.city === loggedInUser.city // Matching studyField
   );
 
   const sendRequest = async (mentorId) => {
@@ -124,14 +124,16 @@ const Request = () => {
   return (
     <div className="p-4 min-h-screen bg-gray-200 font-Interi">
       <div className="m-6 bg-transparent flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4">
-       
+        <button className="font-bold py-2 px-4 rounded">
+          <FaUserPlus className="fill-current text-2xl mr-1" />
+        </button>
         <div className="text-2xl font-bold py-2 px-4 rounded">Find Mentors</div>
         <div className="relative">
           <input
             type="text"
             placeholder="Search mentors..."
             value={searchTerm}
-            onChange={handleSearch} 
+            onChange={handleSearch}
             className="bg-orange-100 py-2 px-3 rounded-md w-full focus:outline-none"
           />
           <FaSearch className="fill-current w-4 h-4 text-gray-500 absolute top-0 right-0 mt-2 mr-2" />
@@ -183,10 +185,10 @@ const Request = () => {
                   className="bg-white py-2 px-3 rounded-md w-full"
                 >
                   <option value="">Select Class Type</option>
-                  <option value="inperson">In Person</option>
+                  <option value="in person">In Person</option>
                   <option value="online">Online</option>
                   <option value="workshops">Workshops</option>
-                  <option value="oneonone">One-on-One</option>
+                  <option value="one-one">One-on-One</option>
                 </select>
               </div>
               <div>
@@ -213,6 +215,7 @@ const Request = () => {
       ) : (
         <div className="min-h-screen bg-gray-200 rounded-md shadow-md overflow-hidden">
           <h1 className="flex justify-center font-bold text-xl text-red-700 font-poppins">BEST MATCHES</h1>
+          <h1 className="flex justify-center font-bold text-xl text-red-700 font-poppins">Close to you</h1>
           <div className="grid grid-cols-3 gap-4 p-4">
             {filteredMentors.map((mentor) => (
               <div key={mentor._id} className="hover:bg-orange-200 p-4 rounded-lg shadow-md bg-white">
@@ -248,4 +251,4 @@ const Request = () => {
   );
 };
 
-export default Request;
+export default Close;
