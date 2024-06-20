@@ -3,7 +3,7 @@ import { FaEnvelope, FaEye, FaEyeSlash, FaArrowLeft } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-function SignIn() {
+function Alogin() {
   // State variables
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -32,32 +32,18 @@ function SignIn() {
       localStorage.setItem('Token', token);
       console.log('Login successful! Token:', token);
 
-      // Check if user has user details
-      const userDetailsResponse = await axios.get('http://localhost:5000/api/detail/getdetail', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!userDetailsResponse.data.firstName || !userDetailsResponse.data) {
-        // User details not found, redirect to fill out details
-        navigate('/userdetails');
-      } else {
-        // User details found, navigate to dashboard/profile
-        navigate('/dashboard/profile');
-      }
+      // Navigate directly to the dashboard
+      navigate('/dashboard');
     } catch (error) {
       console.log(error);
-      if (error.response && error.response.status === 404) {
-        // Axios error with status code 404, navigate to fill out details
-        navigate('/userdetails');
-      } else {
-        setError('Invalid email or password');
-      }
+      setError('Invalid email or password');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen  text-white flex items-center justify-center bg-gradient-to-r from-orange-800 via-black to-violet-800 font-poppins">
+    <div className="min-h-screen text-white flex items-center justify-center bg-gradient-to-r from-orange-800 via-black to-violet-800 font-poppins">
       <Link to="/" className="absolute top-6 left-6 text-white text-2xl">
         <FaArrowLeft />
       </Link>
@@ -88,24 +74,23 @@ function SignIn() {
               placeholder="Password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
-              className="nput-field font-bold bg-transparent text-white border-b-2 border-white py-2 px-3"
+              className="input-field font-bold bg-transparent text-white border-b-2 border-white py-2 px-3"
               required
             />
             <div
               className="absolute top-6 right-12 text-xl cursor-pointer text-white"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? <FaEyeSlash className="inline-block top-3 left-3 text-white"/> : <FaEye className="inline-block top-3 left-3 text-white"/>}
+              {showPassword ? <FaEyeSlash className="inline-block top-3 left-3 text-white" /> : <FaEye className="inline-block top-3 left-3 text-white" />}
             </div>
           </div>
-          <div className="relative  p-5 mb-4">
+          <div className="relative p-5 mb-4">
             <input
               type="checkbox"
               id="rememberMe"
               name="rememberMe"
               checked={rememberMe}
               onChange={(event) => setRememberMe(event.target.checked)}
-              
             />
             <label htmlFor="rememberMe" className="text-white">
               Remember Me
@@ -115,8 +100,7 @@ function SignIn() {
           <div className="flex items-center justify-center pt-9">
             <button
               type="submit"
-              className="btn-login text-2xl bg-gradient-to-r from-red-800 to-violet-600  hover:bg-white hover:text-black text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline "
-              
+              className="btn-login text-2xl bg-gradient-to-r from-red-800 to-violet-600 hover:bg-white hover:text-black text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline"
             >
               {isLoading ? 'Logging in...' : 'Log In'}
             </button>
@@ -124,14 +108,10 @@ function SignIn() {
           {/* Error message */}
           {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
         </form>
-        {/* Signup link */}
-        <div className="mt-4 p-6">
-          <p>Don't have an account?<Link to="/signup"><u>Signup</u> </Link></p>
-          <p>Continue as Admin  <Link to="/alogin"><u>➡</u> </Link></p>
-        </div>
+      
       </div>
     </div>
   );
 }
 
-export default SignIn;
+export default Alogin;

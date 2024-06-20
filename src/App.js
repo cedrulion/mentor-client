@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import SignUp from './components/Auth/SignUp';
 import SignIn from './components/Auth/SignIn';
+import Alogin from './components/Auth/Alogin';
 import LandingPage from './components/LandingPage';
 import DashboardLayout from './components/DashboardLayout';
 import Profile from './components/Profile';
@@ -24,7 +25,8 @@ import Track from './components/Track';
 import LeanerRequest from './components/LearnerRequest';
 import LearnerChat from './components/LearnerChat';
 import Close from './components/Close';
-
+import UserManagement from './components/UserManagement';
+import ManageUploads from './components/ManageUploads';
 
 function App() {
   return (
@@ -33,6 +35,7 @@ function App() {
        <Route  path="/" element={<Nav/>} ></Route>
         <Route  path="/signup" element={<SignUp/>} ></Route>
         <Route  path="/signin" element={<SignIn/>} ></Route>
+        <Route  path="/alogin" element={<Alogin/>} ></Route>
         <Route  path="/landingpage" element={<LandingPage/>} ></Route>
         <Route  path="/nav" element={<Nav/>} ></Route>
         <Route  path="/userdetails" element={<UserDetails/>} ></Route>
@@ -55,6 +58,8 @@ function App() {
          <Route  path="matching" element={<Matching/>} />
          <Route  path="status" element={<LeanerRequest/>} />
          <Route  path="chato" element={<LearnerChat/>} />
+         <Route  path="usermanagement" element={<UserManagement/>} />
+         <Route  path="uploads" element={<ManageUploads/>} />
 
          </Route>
         </Routes>

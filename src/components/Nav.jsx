@@ -1,6 +1,5 @@
 import React from 'react';
 import { FaLinkedin, FaFacebook, FaTwitter, FaInstagram, FaEnvelope, FaPhone, FaMapMarkerAlt, FaGlobe, FaSearch, FaUsers } from 'react-icons/fa';
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import LOGO from "../Assets/LOGO.png";
 
@@ -14,7 +13,7 @@ export default function Nav() {
 
   return (
     <div id="home" className='text-white min-h-screen bg-gradient-to-l from-orange-600 to-gray-950'>
-      <div className='sticky top-0 z-10 md:flex justify-between shadow-2xl pt-3'>
+      <div className='sticky top-0 z-10 md:flex justify-between shadow-2xl pt-3 bg-gradient-to-l from-orange-600 to-gray-950'>
         <div className='flex justify-between gap-4'>
           <img src={LOGO} alt="logo" className="h-12 rounded-full ml-6" />
           <h1 className='text-white font-Roboto text-xl pt-2'>National Women's Council</h1>
@@ -42,31 +41,31 @@ export default function Nav() {
         <h1>in security careers</h1>
       </div>
 
-      <section className='pt-9 ml-32'>
+      <section className='py-9 mx-32'>
         <div className='grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6'>
           {/* First Card */}
-          <div className='bg-white text-black border-black border-[1.5px] w-64 rounded-lg'>
-            <div className='pt-3'>
+          <div className='bg-white text-black border-black border-[1.5px] w-full rounded-lg p-6 flex flex-col justify-between'>
+            <div className='pb-6'>
               <h1 className='font-Roboto font-bold text-center text-xl py-3'>Your Journey starts Here.</h1>
               <p className='mx-8 font-Roboto'>Join the movement for women in security today. Create a future where women excel in the security industry.</p>
-              <button className='text-white bg-gradient-to-l from-red-500 to-orange-600 w-full rounded py-3'>Join us today!</button>
             </div>
+            <button className='text-white bg-gradient-to-l from-red-500 to-orange-600 w-full rounded py-3 mt-auto'>Join us today!</button>
           </div>
           {/* Second Card */}
-          <div className='bg-white text-black border-black border-[1.5px] w-64 rounded-lg'>
-            <div className='pt-3'>
+          <div className='bg-white text-black border-black border-[1.5px] w-full rounded-lg p-6 flex flex-col justify-between'>
+            <div className='pb-6'>
               <h1 className='font-Roboto font-bold text-center py-3 text-xl'>Connect, Learn, Thrive.</h1>
               <p className='mx-8 font-Roboto'>Your gateway to a supportive community. Build your security career with us. Connect, gain insights, and advance.</p>
-              <button className='text-white bg-gradient-to-l from-violet-800 to-orange-950 w-full rounded py-3'>Get in touch with us</button>
             </div>
+            <button className='text-white bg-gradient-to-l from-violet-800 to-orange-950 w-full rounded py-3 mt-auto'>Get in touch with us</button>
           </div>
           {/* Third Card */}
-          <div className='bg-white text-black border-black border-[1.5px] w-64 rounded-lg'>
-            <div className='pt-2'>
+          <div className='bg-white text-black border-black border-[1.5px] w-full rounded-lg p-6 flex flex-col justify-between'>
+            <div className='pb-6'>
               <h1 className='font-Roboto font-bold text-center text-xl py-3'>Together, WE Rise and Secure</h1>
               <p className='mx-8 font-Roboto'>Finding Strength in unity, and paving the path to success in the security industry for women.</p>
-              <button className='text-white bg-gradient-to-l from-violet-800 to-orange-950 w-full rounded py-3'>Get to know us better</button>
             </div>
+            <button className='text-white bg-gradient-to-l from-violet-800 to-orange-950 w-full rounded py-3 mt-auto'>Get to know us better</button>
           </div>
         </div>
       </section>
@@ -81,7 +80,7 @@ export default function Nav() {
           <section className='p-9 m-2'>
             <div className="grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {/* First Card */}
-              <div className="bg-white text-black border-black border-[1.5px] w-64 rounded-lg mb-9 p-4">
+              <div className="bg-white text-black border-black border-[1.5px] w-full rounded-lg mb-9 p-4 flex flex-col justify-between">
                 <div>
                   <button className="text-white bg-gradient-to-l from-violet-800 to-orange-950 w-12 h-12 rounded-full mx-auto flex items-center justify-center">
                     <FaGlobe className="text-xl" />
@@ -92,7 +91,7 @@ export default function Nav() {
               </div>
 
               {/* Second Card */}
-              <div className="bg-white text-black border-black border-[1.5px] w-64 rounded-lg mb-9 p-4">
+              <div className="bg-white text-black border-black border-[1.5px] w-full rounded-lg mb-9 p-4 flex flex-col justify-between">
                 <div>
                   <button className="text-white bg-gradient-to-l from-violet-800 to-orange-950 w-12 h-12 rounded-full mx-auto flex items-center justify-center">
                     <FaSearch className="text-xl" />
@@ -103,7 +102,7 @@ export default function Nav() {
               </div>
 
               {/* Third Card */}
-              <div className="bg-white text-black border-black border-[1.5px] w-64 rounded-lg mb-9 p-4">
+              <div className="bg-white text-black border-black border-[1.5px] w-full rounded-lg mb-9 p-4 flex flex-col justify-between">
                 <div>
                   <button className="text-white bg-gradient-to-l from-violet-800 to-orange-950 w-12 h-12 rounded-full mx-auto flex items-center justify-center">
                     <FaUsers className="text-xl" />
@@ -133,17 +132,21 @@ export default function Nav() {
               </li>
               <li className="flex items-center mb-2">
                 <FaPhone className="mr-2" />
-                <span>Hotline 4342</span>
+                <span>+250 788 350 035</span>
               </li>
-              <li className="flex items-center">
+              <li className="flex items-center mb-2">
                 <FaMapMarkerAlt className="mr-2" />
-                <span>Street KG 002, Kigali, Rwanda</span>
+                <span>KN 3 Ave, Kigali, Rwanda</span>
+              </li>
+              <li className="flex items-center mb-2">
+                <FaGlobe className="mr-2" />
+                <span>Rwanda</span>
               </li>
             </ul>
           </div>
         </div>
 
-        <h1 className='text-xl font-bold text-center pt-28'>Our Socials</h1>
+        <h1 className="text-xl font-bold text-center pt-28">Our Socials</h1>
         <div className="flex items-center justify-center space-x-4 pt-5">
           <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" className="bg-gradient-to-r from-violet-800 to-orange-600 rounded-full p-2">
             <FaLinkedin className="text-white text-2xl" />

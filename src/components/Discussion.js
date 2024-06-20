@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Forum from './Forum';
 import { AiOutlineArrowUp } from 'react-icons/ai'; // Import upvote icon
+import { FaCommentDots, FaPlusCircle, FaMinusCircle } from 'react-icons/fa'; // Import icons for comments and add
 import CommentsModal from './CommentsModal'; // Import the CommentsModal component
 
 function Discussion() {
@@ -53,7 +54,7 @@ function Discussion() {
       // Update state to show comments for the clicked question
       setShowComments((prevShowComments) => ({
         ...prevShowComments,
-        [questionId]: true, // Show comments for this question
+        [questionId]: !prevShowComments[questionId], // Toggle comments for this question
       }));
       setCommentsData(response.data); // Store comments data in state
     } catch (error) {
@@ -89,27 +90,38 @@ function Discussion() {
             <ul className='grid grid-rows-1 sm:grid-rows-2 md:grid-rows-4 gap-4 mt-5'>
               {questions.map((question) => (
                 <li className='bg-gray-100 shadow-md rounded-lg p-4' key={question._id}>
-                  <span className='bg-gray-500 text-white px-2 py-1 rounded-md mr-2'>{question.upvotes}</span>
+                  
                   <div className='flex justify-between items-center'>
-                    <div className='flex items-center'>
-                      <button className='bg-gray-500 text-white px-2 py-1 rounded-md' onClick={() => handleUpvote(question._id)}>
-                        <AiOutlineArrowUp /> Votes
-                      </button>
+                    <div className='flex  items-center'>
+                      <div className='flex flex-col items-center bg-gradient-to-r from-stone-400 to-gray-500 rounded-md'>
+                        <h1 className='text-white px-6 rounded-md'>{question.upvotes}</h1>
+                        <button className='text-white px-2 py-1 rounded-md' onClick={() => handleUpvote(question._id)}>
+                           Votes
+                        </button>
+                      </div>
                       <button
-                        className='bg-gray-500 text-white px-2 py-1 rounded-md ml-2'
+                        className='bg-gray-500 text-white px-2 py-1 rounded-md ml-2 flex items-center'
                         onClick={() => handleShowComments(question._id)}
                       >
-                        {showComments[question._id] ? 'Hide Comments' : 'View Comments'}
+                        {showComments[question._id] ? (
+                          <>
+                            <FaMinusCircle className='mr-1' />
+                          </>
+                        ) : (
+                          <>
+                            <FaCommentDots className='mr-1' /> 
+                          </>
+                        )}
                       </button>
                       {/* Add button to toggle comment modal */}
                       <button
-                        className='bg-gray-500 text-white px-2 py-1 rounded-md ml-2'
+                        className='bg-gray-500 text-white px-2 py-1 rounded-md ml-2 flex items-center'
                         onClick={() => {
                           setShowModal(true);
                           setQuestionId(question._id.toString()); // Convert to string before setting
                         }}
                       >
-                        Add Comment
+                        <FaPlusCircle className='mr-1' />
                       </button>
                     </div>
                     <div className='bg-white p-2 w-full text-xl font-serif font-extrabold'>

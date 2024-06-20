@@ -9,7 +9,6 @@ const SignUp = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    dob: '',
     agree: false,
   });
   const [errors, setErrors] = useState({});
@@ -34,11 +33,6 @@ const SignUp = () => {
 
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
-      isValid = false;
-    }
-
-    if (!formData.dob) {
-      newErrors.dob = 'Please enter your date of birth';
       isValid = false;
     }
 
@@ -127,20 +121,6 @@ const SignUp = () => {
               />
               <FaLock className="inline-block  top-3 left-3 text-gray-500" />
               {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>}
-            </div>
-
-            <div>
-              <input
-                type="date"
-                id="dob"
-                name="dob"
-                placeholder="Date of Birth"
-                onChange={handleInputChange}
-                className={`input-field font-bold bg-transparent text-white border-b-2 border-white ${errors.dob && 'border-red-500'}`}
-                required
-              />
-       
-              {errors.dob && <p className="text-red-500 text-sm mt-1">{errors.dob}</p>}
             </div>
           </div>
           <div className="flex items-center mb-4 pt-9">

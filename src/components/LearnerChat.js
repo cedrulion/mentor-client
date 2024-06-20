@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
 const ChatContainer = styled.div`
   max-width: 600px;
@@ -44,6 +45,7 @@ function LearnerChat() {
   const [loading, setLoading] = useState(false);
   const [replies, setReplies] = useState({});
   const [message, setMessage] = useState('');
+  const [visibleReplies, setVisibleReplies] = useState({}); // To track visible replies
 
   useEffect(() => {
     const fetchStatus = async () => {
@@ -113,6 +115,13 @@ function LearnerChat() {
     }
   };
 
+  const toggleRepliesVisibility = (questionId) => {
+    setVisibleReplies((prevState) => ({
+      ...prevState,
+      [questionId]: !prevState[questionId],
+    }));
+  };
+
   return (
     <ChatContainer>
       <div className="h-screen bg-gradient-to-r from-gray-300 to-orange-200 p-6">
@@ -134,17 +143,22 @@ function LearnerChat() {
             <p className="text-gray-800">Your request is not accepted yet. Status: {status}</p>
           )}
         </div>
+
         {questions.map((question) => (
           <div key={question._id}>
-            {question.replies.map((reply) => (
+            <QuestionWrapper>
+              <p className="font-bold font-inter">Question</p>
+              <p>{question.message}</p>
+              <Button onClick={() => toggleRepliesVisibility(question._id)}>
+                {visibleReplies[question._id] ? <FaChevronUp /> : <FaChevronDown />}
+              </Button>
+            </QuestionWrapper>
+            {visibleReplies[question._id] && question.replies.map((reply) => (
               <ReplyWrapper key={reply._id}>
                 <p>{reply.message}</p>
               </ReplyWrapper>
             ))}
-            <QuestionWrapper>
-              <p>{question.message}</p>
-              <p><strong>From:</strong> {question.learnerFirstName}</p>
-            </QuestionWrapper>
+
             {!replies[question._id] && (
               <>
                 <ReplyWrapper>

@@ -32,7 +32,7 @@ const DashboardLayout = () => {
       {isSidebarOpen && <Sidebar onClose={toggleSidebar} />}
 
       <div className={`flex-grow ${isSidebarOpen ? 'ml-56' : 'ml-0'}`}>
-      <div className="fixed top-0">
+      <div className="fixed top-0 m-2">
           <button className="text-black focus:outline-none text-lg" onClick={toggleSidebar}>
             <FaBars  />
           </button>

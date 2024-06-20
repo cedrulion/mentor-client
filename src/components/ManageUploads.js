@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
-import Forum from './Forum';
+import Modal from './Modal'; // Assuming Modal component is defined separately
 
 // Define inline styles for CSS
 const styles = {
@@ -42,26 +42,8 @@ const styles = {
   },
 };
 
-// Modal Component
-const Modal = ({ onClose, resource }) => {
-  return (
-    <div style={styles.modal}>
-      <div style={styles.modalContent}>
-        <h2 className="text-2xl font-bold">{resource.title}</h2>
-        <p><strong>Date:</strong> {new Date(resource.date).toLocaleString()}</p>
-        <p><strong>Description:</strong> {resource.description}</p>
-        <p><strong>Type:</strong> {resource.type}</p>
-
-        <button onClick={onClose} style={{ ...styles.button, backgroundColor: 'red' }}>
-          Close
-        </button>
-      </div>
-    </div>
-  );
-};
-
 // Main Resource Component
-function Resource() {
+function ManageUploads() {
   const [title, setTitle] = useState('');
   const [date, setDate] = useState('');
   const [description, setDescription] = useState('');
@@ -171,9 +153,8 @@ function Resource() {
     setIsModalOpen(false);
   };
 
-  const printIframeContent = (url) => {
-    const printWindow = window.open(url, '_blank');
-    printWindow.print();
+  const countResourcesByType = (type) => {
+    return resources.filter(resource => resource.type === type).length;
   };
 
   const renderResource = (resource) => {
@@ -190,31 +171,26 @@ function Resource() {
       case 'Article':
         return (
           <div>
-            
-            <button
-              onClick={() => printIframeContent(`http://localhost:5000${resource.articleUrl}`)}
-              style={styles.button}
-            >
-              Print
-            </button>
-          </div>
-        );
-      case 'Module':
-        return (
-          <div>
-            
-            <button
-              onClick={() => printIframeContent(`http://localhost:5000${resource.moduleUrl}`)}
-              style={styles.button}
-            >
-              Print
-            </button>
+            <a href={`http://localhost:5000${resource.articleUrl}`} target="_blank" rel="noopener noreferrer">
+              View Article
+            </a>
           </div>
         );
       case 'Webinar':
         return (
           <div>
             <iframe title="Webinar" src={resource.webinarUrl} width="800" height="600"></iframe>
+          </div>
+        );
+      case 'Module':
+        return (
+          <div>
+            <a href={`http://localhost:5000${resource.moduleUrl}`} target="_blank" rel="noopener noreferrer">
+              View Module
+            </a>
+            <button onClick={() => handleLearnMore(resource)} style={styles.button}>
+              Learn More
+            </button>
           </div>
         );
       default:
@@ -224,14 +200,32 @@ function Resource() {
 
   return (
     <div>
-      <Forum />
       <div className="bg-gradient-to-r from-slate-300 to-orange-200 px-9">
         <div className="py-3">
-          <p className="text-center text-xl">
-            Explore the wealth of information, tools, and insights curated to enhance your skills, knowledge, and career development
-          </p>
-          <div className="flex justify-center gap-8 pt-3 ">
-            <h1 className="py-2 px-4">Content Types</h1>
+          <p className="text-center text-xl mb-5">Uploaded Contents</p>
+          
+          {/* Type Count Cards */}
+          <div className="flex justify-around">
+            <div className="bg-green-300 py-2 px-5 rounded-md">
+              <p>Webinar</p>
+              <p>{countResourcesByType('Webinar')}</p>
+            </div>
+            <div className="bg-yellow-300 py-2  px-5 rounded-md">
+              <p>Video</p>
+              <p>{countResourcesByType('Video')}</p>
+            </div>
+            <div className="bg-orange-300 py-2  px-5 rounded-md">
+              <p>Module</p>
+              <p>{countResourcesByType('Module')}</p>
+            </div>
+            <div className="bg-blue-300 py-2  px-5 rounded-md">
+              <p>Article</p>
+              <p>{countResourcesByType('Article')}</p>
+            </div>
+          </div>
+          
+          {/* Filter Buttons */}
+          <div className="flex justify-center gap-8 pt-3">
             <button className={`bg-yellow-200 py-2 px-4 ${filterType === '' ? 'font-bold' : ''}`} onClick={() => setFilterType('')}>
               All
             </button>
@@ -248,37 +242,6 @@ function Resource() {
               Articles
             </button>
           </div>
-
-          <form onSubmit={handleSubmit} className="mt-3">
-            <h1 className="text-lg font-bold">Adding New Resources</h1>
-            <div className="grid grid-cols-2 gap-4">
-              <label>Title:</label>
-              <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} required className="border border-gray-300 rounded-md p-2" />
-
-              <label>Date:</label>
-              <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required className="border border-gray-300 rounded-md p-2" />
-
-              <label>Description:</label>
-              <textarea value={description} onChange={(e) => setDescription(e.target.value)} required className="border border-gray-300 rounded-md p-2" />
-
-              <label>Type:</label>
-              <select value={type} onChange={(e) => setType(e.target.value)} required className="border border-gray-300 rounded-md p-2">
-                <option value="Webinar">Webinar</option>
-                <option value="Video">Video</option>
-                <option value="Module">Module</option>
-                <option value="Article">Article</option>
-              </select>
-              {['Video', 'Article', 'Module'].includes(type) && (
-                <>
-                  <label>File Upload:</label>
-                  <input type="file" onChange={handleFileChange} className="border border-gray-300 rounded-md p-2" />
-                </>
-              )}
-            </div>
-            <button type="submit" style={styles.button}>
-              {loading ? 'Uploading...' : 'Create Resource'}
-            </button>
-          </form>
         </div>
 
         <div className="my-8">
@@ -318,4 +281,4 @@ function Resource() {
   );
 }
 
-export default Resource;
+export default ManageUploads;

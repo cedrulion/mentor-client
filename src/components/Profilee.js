@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link,useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import { FiUser } from 'react-icons/fi';
 import Modal from 'react-modal';
@@ -9,30 +9,32 @@ import LOG from "../Assets/loading.gif";
 
 Modal.setAppElement('#root');
 
-const Profile = ({ onClose }) => {
+const Profilee = ({ onClose }) => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [userDetail, setUserDetail] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [skills, setSkills] = useState([]);
+  const [experiences, setExperiences] = useState([]);
   const [posts, setPosts] = useState([]);
-  const [newSkill, setNewSkill] = useState({
-    sname: '',
+  const [newExperience, setNewExperience] = useState({
+    title: '',
     description: '',
+    startDate: '',
+    endDate: '',
   });
   const token = localStorage.getItem('Token');
   const currentDate = new Date();
   const navigate = useNavigate();
 
-  const fetchUserSkills = async () => {
+  const fetchUserExperiences = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/skill/${userDetail?.user}`, {
+      const response = await axios.get(`http://localhost:5000/api/experience/${userDetail?.user}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setSkills(response.data.data);
+      setExperiences(response.data.data);
       console.log(response.data.data);
     } catch (error) {
-      console.error('Error fetching user Skills:', error);
+      console.error('Error fetching user experiences:', error);
     } finally {
       setLoading(false);
     }
@@ -69,7 +71,7 @@ const Profile = ({ onClose }) => {
 
   useEffect(() => {
     if (userDetail) {
-      fetchUserSkills();
+      fetchUserExperiences();
       fetchPosts();
     }
   }, [userDetail, token]);
@@ -92,50 +94,49 @@ const Profile = ({ onClose }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewSkill((prevSkill) => ({
-      ...prevSkill,
+    setNewExperience((prevExperience) => ({
+      ...prevExperience,
       [name]: value,
     }));
   };
 
-  const handleAddSkill = async () => {
+  const handleAddExperience = async () => {
     try {
-      await axios.post('http://localhost:5000/api/skill', {
+      await axios.post('http://localhost:5000/api/experience', {
         userId: userDetail?.user,
-        sname: newSkill.sname,
-        description: newSkill.description,
+        ...newExperience,
       }, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      fetchUserSkills();
+      fetchUserExperiences();
       handleCloseModal();
     } catch (error) {
-      console.error('Error adding Skill:', error);
+      console.error('Error adding experience:', error);
     }
   };
 
-  const handleEditSkill = async (skillId, updatedSkill) => {
+  const handleEditExperience = async (experienceId, updatedExperience) => {
     try {
-      await axios.put(`http://localhost:5000/api/skill/${skillId}`, updatedSkill, {
+      await axios.put(`http://localhost:5000/api/experience/${experienceId}`, updatedExperience, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      fetchUserSkills();
+      fetchUserExperiences();
     } catch (error) {
-      console.error('Error editing Skill:', error);
+      console.error('Error editing experience:', error);
     }
   };
 
-  const handleDeleteSkill = async (skillId) => {
+  const handleDeleteExperience = async (experienceId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/skill/${skillId}`, {
+      await axios.delete(`http://localhost:5000/api/experience/${experienceId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      fetchUserSkills();
+      fetchUserExperiences();
     } catch (error) {
-      console.error('Error deleting Skill:', error);
+      console.error('Error deleting experience:', error);
     }
   };
 
@@ -154,14 +155,13 @@ const Profile = ({ onClose }) => {
   return (
     <>
       {loading ? (
-        <div className="min-h-screen bg-gradient-to-r from-gray-300 to-orange-200 flex items-center justify-center">
-          <img src={LOG} alt="logo" />
-        </div>
+        
+       <div className="min-h-screen  bg-gradient-to-r from-gray-300 to-orange-200 flex items-center justify-center"><img src={LOG} alt="logo"  /></div>
+      
       ) : (
         <div className="min-h-screen items-center justify-center ml-7 bg-gradient-to-r from-gray-300 to-orange-200">
-        
-
-          <div className="flex justify-between">
+          
+          <div className='flex justify-between'>
             <div className="flex-1 p-5">
               <h3 className="text-xl font-semibold text-gray-800 mb-2 pt-9">Welcome Back</h3>
               {posts.map((post, index) => (
@@ -174,8 +174,10 @@ const Profile = ({ onClose }) => {
                     </div>
                   </div>
                   <div className='border-b border-gray-400'>
+                   
                     <p>{post.description}</p>
                     <p className="text-blue-500">{post.type}</p>
+
                   </div>
                 </div>
               ))}
@@ -213,14 +215,12 @@ const Profile = ({ onClose }) => {
                 )}
                 <div className="flex justify-center mt-4">
                   <button onClick={handleOpenModal} className="bg-gradient-to-r from-violet-800 to-orange-600 text-white font-bold py-2 px-4 rounded">
-                    + Edit Profile
+                   + Edit Profile
                   </button>
                 </div>
                 <div className='m-9'>
                   <p className='p-6 font-serif font-semibold'>Messages</p>
-                  <Link to='dashboard/chato' onClick={() => handleItemClick('/dashboard/chato')}>
-                    <button className='px-6 text-white bg-violet-900 font-serif font-semibold'>View All</button>
-                  </Link>
+                <Link to='dashboard/chato'  onClick={() => handleItemClick('/dashboard/chato')}>  <button className='px-6 text-white bg-violet-900 font-serif font-semibold'>View All</button></Link>
                 </div>
               </div>
             </div>
@@ -229,56 +229,68 @@ const Profile = ({ onClose }) => {
       )}
 
       <Modal isOpen={isModalOpen} onRequestClose={handleCloseModal} className="modal">
-        <h2 className="text-3xl font-semibold text-center text-gray-800 pt-8 font-mono">Skills</h2>
+        <h2 className="text-3xl font-semibold text-center text-gray-800 pt-8 font-mono">Experiences</h2>
         {loading ? (
-          <p>Loading...</p>
+          <p>Loading experiences...</p>
+        ) : experiences.length > 0 ? (
+          <div className="grid grid-cols-1 gap-4 mt-2 font-mono">
+            {experiences.map((experience) => (
+              <div key={experience._id} className="bg-white p-4 rounded-md shadow">
+                <h3 className="text-lg font-semibold">{experience.title}</h3>
+                <p className="text-sm text-gray-500">{experience.description}</p>
+                <p className="text-xs text-gray-400 mt-2">
+                  {new Date(experience.startDate).toLocaleDateString()} -{' '}
+                  {new Date(experience.endDate).toLocaleDateString()}
+                </p>
+              </div>
+            ))}
+          </div>
         ) : (
-          <div>
-            <ul>
-              {skills.map((skill) => (
-                <li key={skill._id} className="flex justify-between bg-slate-200 p-4 m-5 rounded-lg">
-                  <div>
-                    <h3 className="text-lg font-semibold">{skill.sname}</h3>
-                    <p className="text-gray-600">{skill.description}</p>
-                  </div>
-                  <div>
-                    <button onClick={() => handleEditSkill(skill._id, { sname: skill.sname, description: skill.description })} className="bg-blue-500 text-white p-1 rounded mr-2">
-                      Edit
-                    </button>
-                    <button onClick={() => handleDeleteSkill(skill._id)} className="bg-red-500 text-white p-1 rounded">
-                      Delete
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-            <form className="flex flex-col items-center space-y-2 ">
+          <p className="text-lg text-center text-gray-800">No experiences found.</p>
+        )}
+        <h2 className="text-center mb-4 font-mono">Add New Experience</h2>
+        <form className="flex flex-col items-center space-y-2 font-mono">
           <input
             type="text"
-            name="sname"
-            placeholder="Skill name"
-            value={newSkill.sname}
+            name="title"
+            placeholder="Title"
+            value={newExperience.title}
             onChange={handleInputChange}
             className="w-full p-2 border border-gray-300 rounded-md"
           />
           <textarea
             name="description"
             placeholder="Description"
-            value={newSkill.description}
+            value={newExperience.description}
             onChange={handleInputChange}
             className="w-full p-2 border border-gray-300 rounded-md"
           />
-         
-          <button type="button" onClick={handleAddSkill} className="bg-blue-500 text-white py-2 px-4 rounded-lg">
-            Add Skill
+          <input
+            type="date"
+            name="startDate"
+            placeholder="Start Date"
+            value={newExperience.startDate}
+            onChange={handleInputChange}
+            className="w-full p-2 border border-gray-300 rounded-md"
+          />
+          <input
+            type="date"
+            name="endDate"
+            placeholder="End Date"
+            value={newExperience.endDate}
+            onChange={handleInputChange}
+            className="w-full p-2 border border-gray-300 rounded-md"
+          />
+          <button type="button" onClick={handleAddExperience} className="bg-blue-500 text-white py-2 px-4 rounded-lg">
+            Add Experience
           </button>
         </form>
-          </div>
-        )}
-        <button onClick={handleCloseModal} className="absolute top-2 right-2 text-xl text-white bg-gray-800 p-2 rounded-full">X</button>
+        <button onClick={handleCloseModal} className="bg-red-500 text-white py-2 px-4 mt-2 rounded-lg">
+          Cancel
+        </button>
       </Modal>
     </>
   );
 };
 
-export default Profile;
+export default Profilee;

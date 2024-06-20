@@ -35,26 +35,29 @@ function Uresource() {
   const renderResource = (resource) => {
     if (resource.type === 'Video') {
       return (
-        <video controls className="max-w-full h-auto">
-          <source src={`http://localhost:5000/api/resources/video/${resource._id}`} type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+        <div>
+          <video controls width="400">
+              <source src={`http://localhost:5000${resource.videoUrl}`} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+            
+          <button onClick={() => handleLearnMore(resource)} className="bg-green-500 text-white px-3 py-1 rounded-md mt-2">
+            Learn More
+          </button>
+        </div>
       );
     } else if (resource.type === 'Article') {
       return (
-        <iframe
-          src={`http://localhost:5000/api/resources/article/${resource._id}`}
-          title={resource.title}
-          className="max-w-full h-screen"
-        ></iframe>
+        <a href={`http://localhost:5000${resource.articleUrl}`} target="_blank" rel="noopener noreferrer">
+          View Article
+        </a>
       );
-    } else {
+    } else if (resource.type === 'Webinar') {
       return (
-        <button onClick={() => window.location.href = `http://localhost:5000/api/resources/webinar/${resource._id}`} className='bg-blue-500 text-white px-4 py-2 rounded-md'>
-          View Webinar
-        </button>
+        <iframe title="Webinar" src={resource.webinarUrl} width="800" height="600"></iframe>
       );
     }
+    return null;
   };
 
   return (
@@ -73,21 +76,22 @@ function Uresource() {
           </div>
 
           <div className='mt-2'>
-          <ul className='mt-2 grid grid-cols-3 gap-3'>
-      {resources
-        .filter(resource => filterType === '' || resource.type === filterType)
-        .map((resource) => (
-          <li key={resource._id} className='bg-gray-200 border border-gray-300 rounded-md p-2 mb-2'>
-            <span className='bg-orange-300 text-red-800 rounded-lg p-1'>{resource.type}</span>
-            <p className='font-bold  pt-5 text-2xl break-words'>{resource.title}</p>
-            <p className='break-words whitespace-normal'>{resource.description}</p>
-            <p className='break-words whitespace-normal'>{resource.date}</p>
-            <button onClick={() => handleLearnMore(resource)} className='text-red-800 px-3 py-1 mt-2 rounded-md flex items-center'>
-              View More <FaArrowRight className='ml-1' />
-            </button>
-          </li>
-        ))}
-    </ul>
+            <ul className='mt-2 grid grid-cols-3 gap-3'>
+              {resources
+                .filter(resource => filterType === '' || resource.type === filterType)
+                .map((resource) => (
+                  <li key={resource._id} className='bg-gray-200 border border-gray-300 rounded-md p-2 mb-2'>
+                    <span className='bg-orange-300 text-red-800 rounded-lg p-1'>{resource.type}</span>
+                    <p className='font-bold  pt-5 text-2xl break-words'>{resource.title}</p>
+                    <p className='break-words whitespace-normal'>{resource.description}</p>
+                    <p className='break-words whitespace-normal'>{resource.date}</p>
+{renderResource(resource)}
+                    <button onClick={() => handleLearnMore(resource)} className='text-red-800 px-3 py-1 mt-2 rounded-md flex items-center'>
+                      View More <FaArrowRight className='ml-1' />
+                    </button>
+                  </li>
+                ))}
+            </ul>
           </div>
           {selectedResource && (
             <Modal isOpen={isModalOpen} onClose={closeModal} resource={selectedResource}>
