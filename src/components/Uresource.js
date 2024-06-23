@@ -39,17 +39,13 @@ function Uresource() {
           <video controls width="400">
               <source src={`http://localhost:5000${resource.videoUrl}`} type="video/mp4" />
               Your browser does not support the video tag.
-            </video>
-            
-          <button onClick={() => handleLearnMore(resource)} className="bg-green-500 text-white px-3 py-1 rounded-md mt-2">
-            Learn More
-          </button>
+          </video>
         </div>
       );
     } else if (resource.type === 'Article') {
       return (
         <a href={`http://localhost:5000${resource.articleUrl}`} target="_blank" rel="noopener noreferrer">
-          View Article
+          Read Article
         </a>
       );
     } else if (resource.type === 'Webinar') {
@@ -65,7 +61,9 @@ function Uresource() {
       <Forum />
       <div className='min-h-screen bg-gradient-to-r from-slate-400 to-orange-200 shadow-lg'>
         <div className='container mx-auto py-2'>
-          <p className='text-center text-xl m-2'>Explore the wealth of information, tools, and insights curated to enhance your skills, knowledge, and career development</p>
+          <p className='text-center text-xl m-2'>
+            Explore the wealth of information, tools, and insights curated to enhance your skills, knowledge, and career development
+          </p>
           <div className='flex justify-center gap-8 pt-3 text-xl'>
             <h1 className='py-2 px-2 font-bold'>Content Types</h1>
             <button className={`bg-yellow-200 py-2 px-4 ${filterType === '' ? 'font-bold' : ''}`} onClick={() => setFilterType('')}>All</button>
@@ -82,10 +80,10 @@ function Uresource() {
                 .map((resource) => (
                   <li key={resource._id} className='bg-gray-200 border border-gray-300 rounded-md p-2 mb-2'>
                     <span className='bg-orange-300 text-red-800 rounded-lg p-1'>{resource.type}</span>
-                    <p className='font-bold  pt-5 text-2xl break-words'>{resource.title}</p>
+                    <p className='font-bold pt-5 text-2xl break-words'>{resource.title}</p>
                     <p className='break-words whitespace-normal'>{resource.description}</p>
                     <p className='break-words whitespace-normal'>{resource.date}</p>
-{renderResource(resource)}
+                   
                     <button onClick={() => handleLearnMore(resource)} className='text-red-800 px-3 py-1 mt-2 rounded-md flex items-center'>
                       View More <FaArrowRight className='ml-1' />
                     </button>
@@ -94,7 +92,7 @@ function Uresource() {
             </ul>
           </div>
           {selectedResource && (
-            <Modal isOpen={isModalOpen} onClose={closeModal} resource={selectedResource}>
+            <Modal isOpen={isModalOpen} onClose={closeModal}>
               {renderResource(selectedResource)}
             </Modal>
           )}

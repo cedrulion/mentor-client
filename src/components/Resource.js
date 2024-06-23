@@ -67,6 +67,7 @@ function Resource() {
   const [description, setDescription] = useState('');
   const [type, setType] = useState('Webinar');
   const [file, setFile] = useState(null);
+  const [webinarUrl, setWebinarUrl] = useState('');
   const [resources, setResources] = useState([]);
   const [token, setToken] = useState('');
   const [userId, setUserId] = useState('');
@@ -122,6 +123,9 @@ function Resource() {
     if (file) {
       formData.append('file', file);
     }
+    if (type === 'Webinar') {
+      formData.append('webinarUrl', webinarUrl);
+    }
 
     try {
       const response = await Axios.post('http://localhost:5000/api/resources', formData, {
@@ -133,6 +137,7 @@ function Resource() {
       setDescription('');
       setType('Webinar');
       setFile(null);
+      setWebinarUrl('');
       alert('Resource created successfully!');
       fetchResources();
     } catch (error) {
@@ -268,6 +273,12 @@ function Resource() {
                 <option value="Module">Module</option>
                 <option value="Article">Article</option>
               </select>
+              {type === 'Webinar' && (
+                <>
+                  <label>Webinar URL:</label>
+                  <input type="text" value={webinarUrl} onChange={(e) => setWebinarUrl(e.target.value)} required className="border border-gray-300 rounded-md p-2" />
+                </>
+              )}
               {['Video', 'Article', 'Module'].includes(type) && (
                 <>
                   <label>File Upload:</label>
@@ -300,9 +311,7 @@ function Resource() {
                       <button onClick={() => handleDelete(resource._id)} className="bg-red-500 text-white px-3 py-1 rounded-md">
                         Delete
                       </button>
-                      <button onClick={() => handleLearnMore(resource)} className="bg-green-500 text-white px-3 py-1 rounded-md">
-                        Learn More
-                      </button>
+                      
                     </li>
                   ))}
               </ul>
