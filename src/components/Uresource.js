@@ -50,7 +50,9 @@ function Uresource() {
       );
     } else if (resource.type === 'Webinar') {
       return (
-        <iframe title="Webinar" src={resource.webinarUrl} width="800" height="600"></iframe>
+        <div>
+            {resource.webinarUrl} 
+          </div>
       );
     }
     return null;
@@ -59,7 +61,7 @@ function Uresource() {
   return (
     <div>
       <Forum />
-      <div className='min-h-screen bg-gradient-to-r from-slate-400 to-orange-200 shadow-lg'>
+      <div className='min-h-screen bg-gradient-to-r from-slate-400 to-orange-200 shadow-lg ml-5'>
         <div className='container mx-auto py-2'>
           <p className='text-center text-xl m-2'>
             Explore the wealth of information, tools, and insights curated to enhance your skills, knowledge, and career development

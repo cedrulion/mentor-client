@@ -33,7 +33,7 @@ function Alogin() {
       console.log('Login successful! Token:', token);
 
       // Navigate directly to the dashboard
-      navigate('/dashboard');
+      navigate('/dashboard/usermanagement');
     } catch (error) {
       console.log(error);
       setError('Invalid email or password');

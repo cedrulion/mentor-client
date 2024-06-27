@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 import Forum from './Forum';
 
-// Define inline styles for CSS
 const styles = {
   button: {
-    backgroundColor: '#1e90ff', /* DodgerBlue */
+    backgroundColor: '#1e90ff',
     color: 'white',
     padding: '10px 20px',
     border: 'none',
@@ -14,7 +13,7 @@ const styles = {
     marginTop: '10px',
   },
   buttonHover: {
-    backgroundColor: '#1c86ee', /* Slightly darker */
+    backgroundColor: '#1c86ee',
   },
   modal: {
     position: 'fixed',
@@ -42,7 +41,6 @@ const styles = {
   },
 };
 
-// Modal Component
 const Modal = ({ onClose, resource }) => {
   return (
     <div style={styles.modal}>
@@ -60,7 +58,6 @@ const Modal = ({ onClose, resource }) => {
   );
 };
 
-// Main Resource Component
 function Resource() {
   const [title, setTitle] = useState('');
   const [date, setDate] = useState('');
@@ -120,11 +117,20 @@ function Resource() {
     formData.append('date', date);
     formData.append('description', description);
     formData.append('type', type);
-    if (file) {
-      formData.append('file', file);
-    }
+
     if (type === 'Webinar') {
+      if (!webinarUrl || !/^https?:\/\/.*/.test(webinarUrl)) {
+        setError('Please provide a valid webinar URL');
+        setLoading(false);
+        return;
+      }
       formData.append('webinarUrl', webinarUrl);
+    } else if (file) {
+      formData.append('file', file);
+    } else {
+      setError('Please provide a file for this resource type');
+      setLoading(false);
+      return;
     }
 
     try {
@@ -149,9 +155,7 @@ function Resource() {
 
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm('Are you sure you want to delete this resource?');
-    if (!confirmDelete) {
-      return;
-    }
+    if (!confirmDelete) return;
 
     try {
       setLoading(true);
@@ -195,7 +199,6 @@ function Resource() {
       case 'Article':
         return (
           <div>
-            
             <button
               onClick={() => printIframeContent(`http://localhost:5000${resource.articleUrl}`)}
               style={styles.button}
@@ -207,7 +210,6 @@ function Resource() {
       case 'Module':
         return (
           <div>
-            
             <button
               onClick={() => printIframeContent(`http://localhost:5000${resource.moduleUrl}`)}
               style={styles.button}
@@ -219,7 +221,7 @@ function Resource() {
       case 'Webinar':
         return (
           <div>
-            <iframe title="Webinar" src={resource.webinarUrl} width="800" height="600"></iframe>
+            {resource.webinarUrl} 
           </div>
         );
       default:
@@ -233,7 +235,7 @@ function Resource() {
       <div className="bg-gradient-to-r from-slate-300 to-orange-200 px-9">
         <div className="py-3">
           <p className="text-center text-xl">
-            Explore the wealth of information, tools, and insights curated to enhance your skills, knowledge, and career development
+            Explore the wealth of information, tools, and insights curated to enhance your skills, knowledge, and career development.
           </p>
           <div className="flex justify-center gap-8 pt-3 ">
             <h1 className="py-2 px-4">Content Types</h1>
@@ -249,7 +251,7 @@ function Resource() {
             <button className={`bg-yellow-200 py-2 px-4 ${filterType === 'Module' ? 'font-bold' : ''}`} onClick={() => setFilterType('Module')}>
               Module
             </button>
-            <button className={`bg-yellow-200 py-2 px-4 ${filterType === 'Article' ? 'font-bold' : ''}`} onClick={() => setFilterType('Article')}>
+                        <button className={`bg-yellow-200 py-2 px-4 ${filterType === 'Article' ? 'font-bold' : ''}`} onClick={() => setFilterType('Article')}>
               Articles
             </button>
           </div>
@@ -311,7 +313,9 @@ function Resource() {
                       <button onClick={() => handleDelete(resource._id)} className="bg-red-500 text-white px-3 py-1 rounded-md">
                         Delete
                       </button>
-                      
+                      <button onClick={() => handleLearnMore(resource)} className="bg-blue-500 text-white px-3 py-1 rounded-md ml-2">
+                        Learn More
+                      </button>
                     </li>
                   ))}
               </ul>

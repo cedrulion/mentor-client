@@ -179,7 +179,7 @@ function ManageUploads() {
       case 'Webinar':
         return (
           <div>
-            <iframe title="Webinar" src={resource.webinarUrl} width="800" height="600"></iframe>
+            {resource.webinarUrl}
           </div>
         );
       case 'Module':
