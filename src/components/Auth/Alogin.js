@@ -21,24 +21,33 @@ function Alogin() {
   // Form submission handler
   const handleSubmit = async (event) => {
     event.preventDefault();
-    try {
-      setIsLoading(true);
-      setError(null);
-      const response = await axios.post('http://localhost:5000/api/auth/signin', { email, password });
-      if (response.data && response.data.user && response.data.user.email) {
-        localStorage.setItem('Profile', JSON.stringify(response.data));
-      }
-      const { token } = response.data;
-      localStorage.setItem('Token', token);
-      console.log('Login successful! Token:', token);
+    
+    // Check if credentials match admin's credentials
+    if (email === 'admin@gmail.com' && password === '0000') {
+      try {
+        setIsLoading(true);
+        setError(null);
 
-      // Navigate directly to the dashboard
-      navigate('/dashboard/usermanagement');
-    } catch (error) {
-      console.log(error);
+        // Send login request to backend
+        const response = await axios.post('http://localhost:5000/api/auth/signin', { email, password });
+
+        // Assuming a successful response here
+        const { data } = response;
+        localStorage.setItem('Profile', JSON.stringify(data));
+        localStorage.setItem('Token', data.token);
+        console.log('Login successful! Token:', data.token);
+
+        // Navigate to dashboard
+        navigate('/dashboard/usermanagement');
+
+      } catch (error) {
+        console.error('Error during login:', error);
+        setError('Invalid email or password');
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
       setError('Invalid email or password');
-    } finally {
-      setIsLoading(false);
     }
   };
 
