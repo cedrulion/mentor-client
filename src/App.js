@@ -8,6 +8,7 @@ import Alogin from './components/Auth/Alogin';
 import LandingPage from './components/LandingPage';
 import DashboardLayout from './components/DashboardLayout';
 import Profile from './components/Profile';
+import Profilee from './components/Profilee';
 
 import Nav from './components/Nav';
 import UserDetails from './components/Auth/UserDetails';
@@ -51,6 +52,7 @@ function App() {
          <Route  path="forum" element={<Forum/>} />
          <Route  path="question" element={<Question/>} />
          <Route  path="profile" element={<Profile/>} />
+         <Route  path="profilee" element={<Profilee/>} />
          <Route  path="Request" element={<Request/>}  />
          <Route  path="Close" element={<Close/>}  />
          <Route  path="track" element={<Track/>}  />

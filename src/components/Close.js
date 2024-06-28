@@ -184,10 +184,10 @@ const Close = () => {
                   className="bg-white py-2 px-3 rounded-md w-full"
                 >
                   <option value="">Select Class Type</option>
-                  <option value="in person">In Person</option>
+                  <option value="inperson">In Person</option>
                   <option value="online">Online</option>
                   <option value="workshops">Workshops</option>
-                  <option value="one-one">One-on-One</option>
+                  <option value="oneonone">One-on-One</option>
                 </select>
               </div>
               <div>

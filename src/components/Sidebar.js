@@ -39,11 +39,12 @@ const Sidebar = ({ onClose }) => {
         <>
           <li className="p-3 hover:bg-gray-700 hover:text-white">
             <Link
-              to="/dashboard/profile"
-              onClick={() => handleItemClick('/dashboard/profile')}
+              to="/dashboard/profilee"
+              onClick={() => handleItemClick('/dashboard/profilee')}
               className="flex items-center space-x-2"
             >
-              <FaHome className="text-3xl" />
+              <FaHome className="text-xl" />
+              <span className="text-lg">Profile</span>
             </Link>
           </li>
           <li className="p-5  hover:bg-gradient-to-r from-orange-500 to-violet-900 hover:text-gray-950">
@@ -52,7 +53,8 @@ const Sidebar = ({ onClose }) => {
               onClick={() => handleItemClick('/dashboard/requests')}
               className="flex items-center space-x-2"
             >
-              <FontAwesomeIcon icon={faUserGroup} size="lg" className="fill-current text-3xl " />
+              <FontAwesomeIcon icon={faUserGroup} size="lg" className="fill-current text-xl " />
+              <span className="text-lg">Requested learner</span>
             </Link>
           </li>
           <li className="p-5 hover:bg-gradient-to-r from-orange-500 to-violet-900 hover:text-gray-950">
@@ -61,7 +63,8 @@ const Sidebar = ({ onClose }) => {
               onClick={() => handleItemClick('/dashboard/chat')}
               className="flex items-center space-x-2"
             >
-              <FaComments className="text-3xl" />
+              <FaComments className="text-xl" />
+              <span className="text-lg">Messages</span>
             </Link>
           </li>
           <li className="p-5  hover:bg-gradient-to-r from-orange-500 to-violet-900 hover:text-gray-950">
@@ -70,7 +73,8 @@ const Sidebar = ({ onClose }) => {
               onClick={() => handleItemClick('/dashboard/resource')}
               className="flex items-center space-x-2"
             >
-              <FaBookmark className="text-3xl" />
+              <FaBookmark className="text-xl" />
+               <span className="text-lg">Forum</span>
             </Link>
           </li>
           <li className="pt-12  hover:bg-gradient-to-r from-orange-500 to-violet-900 hover:text-gray-950">
