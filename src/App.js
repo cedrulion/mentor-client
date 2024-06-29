@@ -1,4 +1,3 @@
-// client/src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -22,6 +21,7 @@ import Request from './components/Request';
 import MentorRequests from './components/MentorRequests';
 import Uresource from './components/Uresource';
 import Chat from './components/Chat';
+import Chats from './components/Chats';
 import Track from './components/Track';
 import LeanerRequest from './components/LearnerRequest';
 import LearnerChat from './components/LearnerChat';
@@ -29,42 +29,43 @@ import Close from './components/Close';
 import UserManagement from './components/UserManagement';
 import ManageUploads from './components/ManageUploads';
 
+
 function App() {
   return (
     <Router>
-       <Routes>
-       <Route  path="/" element={<Nav/>} ></Route>
-        <Route  path="/signup" element={<SignUp/>} ></Route>
-        <Route  path="/signin" element={<SignIn/>} ></Route>
-        <Route  path="/alogin" element={<Alogin/>} ></Route>
-        <Route  path="/landingpage" element={<LandingPage/>} ></Route>
-        <Route  path="/nav" element={<Nav/>} ></Route>
-        <Route  path="/userdetails" element={<UserDetails/>} ></Route>
-        <Route  path="/match" element={<Matching/>} ></Route>
-        
-         <Route  path="/dashboard" element={<DashboardLayout/>} >
-          
-         <Route  path="requests" element={<MentorRequests/>} />
-         <Route  path="search" element={<SearchBar/>} />
-         <Route  path="resource" element={<Resource/>} />
-         <Route  path="uresource" element={<Uresource/>} />
-         <Route  path="Discussion" element={<Discussion/>} />
-         <Route  path="forum" element={<Forum/>} />
-         <Route  path="question" element={<Question/>} />
-         <Route  path="profile" element={<Profile/>} />
-         <Route  path="profilee" element={<Profilee/>} />
-         <Route  path="Request" element={<Request/>}  />
-         <Route  path="Close" element={<Close/>}  />
-         <Route  path="track" element={<Track/>}  />
-         <Route  path="chat" element={<Chat/>} />
-         <Route  path="matching" element={<Matching/>} />
-         <Route  path="status" element={<LeanerRequest/>} />
-         <Route  path="chato" element={<LearnerChat/>} />
-         <Route  path="usermanagement" element={<UserManagement/>} />
-         <Route  path="uploads" element={<ManageUploads/>} />
+      <Routes>
+        <Route path="/" element={<Nav />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/alogin" element={<Alogin />} />
+        <Route path="/landingpage" element={<LandingPage />} />
+        <Route path="/nav" element={<Nav />} />
+        <Route path="/userdetails" element={<UserDetails />} />
+        <Route path="/match" element={<Matching />} />
 
-         </Route>
-        </Routes>
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route path="requests" element={<MentorRequests />} />
+          <Route path="search" element={<SearchBar />} />
+          <Route path="resource" element={<Resource />} />
+          <Route path="uresource" element={<Uresource />} />
+          <Route path="Discussion" element={<Discussion />} />
+          <Route path="forum" element={<Forum />} />
+          <Route path="question" element={<Question />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="profilee" element={<Profilee />} />
+          <Route path="Request" element={<Request />} />
+          <Route path="Close" element={<Close />} />
+          <Route path="track" element={<Track />} />
+          <Route path="chat" element={<Chat />} />
+          <Route path="chats" element={<Chats />} />
+          <Route path="matching" element={<Matching />} />
+          <Route path="status" element={<LeanerRequest />} />
+          <Route path="chato" element={<LearnerChat />} />
+          <Route path="usermanagement" element={<UserManagement />} />
+          <Route path="uploads" element={<ManageUploads />} />
+          
+        </Route>
+      </Routes>
     </Router>
   );
 }

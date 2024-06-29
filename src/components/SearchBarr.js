@@ -5,13 +5,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import LOGO from "../Assets/loading.gif";
 
-const SearchBar = () => {
+const SearchBarr = ({ onStartChat }) => {
   const [classType, setClassType] = useState('');
   const [classTime, setClassTime] = useState('');
   const [mentors, setMentors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
- const [userExperiences, setUserExperiences] = useState([]);
+  const [userExperiences, setUserExperiences] = useState([]);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const token = localStorage.getItem('Token');
@@ -55,7 +55,8 @@ const SearchBar = () => {
     // Dummy function, replace with actual logic for fetching request status if needed
     return 'accepted'; // Example: Hardcoded for demonstration
   };
- const sendRequest = async (mentorId) => {
+
+  const sendRequest = async (mentorId) => {
     try {
       const response = await axios.post(
         `http://localhost:5000/api/requests/${mentorId}`,
@@ -70,7 +71,7 @@ const SearchBar = () => {
     }
   };
 
-const viewDetail = async (userId) => {
+  const viewDetail = async (userId) => {
     try {
       const response = await axios.get(`http://localhost:5000/api/detail/user/detail/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -81,7 +82,8 @@ const viewDetail = async (userId) => {
       console.error('Error fetching user detail:', error);
     }
   };
-const fetchUserExperiences = async (userId) => {
+
+  const fetchUserExperiences = async (userId) => {
     try {
       const response = await axios.get(`http://localhost:5000/api/experience/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -93,10 +95,27 @@ const fetchUserExperiences = async (userId) => {
     }
   };
 
-const resetForm = () => {
+  const resetForm = () => {
     setClassType('');
     setClassTime('');
   };
+
+  const startChat = async (mentorId) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:5000/api/chats/start/${mentorId}`,
+     
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      const chatId = response.data.chatId;
+      onStartChat(chatId);
+    } catch (error) {
+      console.error('Error starting chat:', error);
+    }
+  };
+
   const ConfirmationModal = ({ onCancel, onConfirm }) => (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 font-Interi">
       <div className="bg-white p-4 rounded-md shadow-md">
@@ -112,7 +131,6 @@ const resetForm = () => {
       </div>
     </div>
   );
-
 
   if (loading) {
     return (
@@ -139,13 +157,12 @@ const resetForm = () => {
         </div>
       </div>
 
-     {selectedUser ? (
+      {selectedUser ? (
         <div className="bg-gradient-to-r from-gray-400 to-orange-200 h-screen rounded-md shadow-md p-4">
-         <div className="flex cursor-pointer" onClick={() => setSelectedUser(null)}>
-              <FaArrowLeft className="text-gray-900 rounded-lg text-xl text-center" />
-            </div>
+          <div className="flex cursor-pointer" onClick={() => setSelectedUser(null)}>
+            <FaArrowLeft className="text-gray-900 rounded-lg text-xl text-center" />
+          </div>
           <div className="flex flex-col items-center">
-            
             <h2 className="text-3xl font-bold mt-4">
               {selectedUser.firstName} {selectedUser.lastName}
             </h2>
@@ -209,6 +226,12 @@ const resetForm = () => {
             >
               Request Session
             </button>
+            <button
+              className="bg-gradient-to-r from-violet-800 to-orange-800 py-2 px-8 text-lg rounded-md text-white mt-4 font-semibold"
+              onClick={() => startChat(selectedUser._id)}
+            >
+              Start Chat
+            </button>
           </div>
         </div>
       ) : (
@@ -222,38 +245,37 @@ const resetForm = () => {
                 className="hover:bg-orange-200 p-4 rounded-lg shadow-md bg-white cursor-pointer"
               >
                 <div className="p-4 bg-gradient-to-r from-gray-200 to-orange-100 rounded-md shadow-md">
-                <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-white rounded-full mr-4"></div>
-                  <div className="text-lg font-semibold text-gray-800">
-                    {mentor.firstName} {mentor.lastName}
+                  <div className="flex items-center mb-4">
+                    <div className="w-12 h-12 bg-white rounded-full mr-4"></div>
+                    <div className="text-lg font-semibold text-gray-800">
+                      {mentor.firstName} {mentor.lastName}
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-gray-500 mb-2">{mentor.city}, {mentor.country}</div>
+                    <div className="text-gray-500 mb-2">{mentor.studyField}, {mentor.school}</div>
+                    <div className="border-t border-gray-300 my-2"></div>
+                    <div className="flex justify-center items-center mb-2">
+                      {renderStars(mentor.review)}
+                      <span className="ml-2 text-gray-600">({mentor.review} reviews)</span>
+                    </div>
+                  </div>
+                  <div className="flex justify-center gap-6 text-white">
+                    <button className="bg-orange-900 py-2 px-3 rounded-md" onClick={() => startChat(mentor._id)}>
+                      Start Chat
+                    </button>
                   </div>
                 </div>
-                <div className="text-center">
-                  <div className="text-gray-500 mb-2">{mentor.city}, {mentor.country}</div>
-                  <div className="text-gray-500 mb-2">{mentor.studyField}, {mentor.school}</div>
-                  <div className="border-t border-gray-300 my-2"></div>
-                  <div className="flex justify-center items-center mb-2">
-                    {renderStars(mentor.review)}
-                    <span className="ml-2 text-gray-600">({mentor.review} reviews)</span>
-                  </div>
-                </div>
-                 <div className="flex justify-center gap-6 text-white">
-                  <button className="bg-orange-900 py-2 px-3 rounded-md">
-                    Request
-                  </button>
-                </div>
-              </div>
-                
               </div>
             ))}
           </div>
         </div>
       )}
-  {showConfirmationModal && (
+      {showConfirmationModal && (
         <ConfirmationModal
           onCancel={() => setShowConfirmationModal(false)}
           onConfirm={() => {
-            sendRequest(selectedUser.user);
+            sendRequest(selectedUser._id);
             resetForm();
             setShowConfirmationModal(false);
           }}
@@ -263,4 +285,4 @@ const resetForm = () => {
   );
 };
 
-export default SearchBar;
+export default SearchBarr;

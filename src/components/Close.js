@@ -97,6 +97,11 @@ const Close = () => {
     }
   };
 
+  const resetForm = () => {
+    setClassType('');
+    setClassTime('');
+  };
+
   const ConfirmationModal = ({ onCancel, onConfirm }) => (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 font-Interi">
       <div className="bg-white p-4 rounded-md shadow-md">
@@ -240,8 +245,9 @@ const Close = () => {
         <ConfirmationModal
           onCancel={() => setShowConfirmationModal(false)}
           onConfirm={() => {
-            setShowConfirmationModal(false);
             sendRequest(selectedUser.user);
+            resetForm();
+            setShowConfirmationModal(false);
           }}
         />
       )}

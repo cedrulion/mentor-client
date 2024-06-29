@@ -1,184 +1,117 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
 import axios from 'axios';
-import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
-const ChatContainer = styled.div`
-  max-width: 600px;
-  margin: 0 auto;
-`;
-
-const MessageWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 8px;
-`;
-
-const QuestionWrapper = styled(MessageWrapper)`
-  background-color: #F3F4F6;
-  align-items: flex-start;
-  margin-left: 20px; /* Left align */
-`;
-
-const ReplyWrapper = styled(MessageWrapper)`
-  background-color: #DCF8C6;
-  align-items: flex-end;
-  margin-right: 20px; /* Right align */
-`;
-
-const Button = styled.button`
-  margin-top: 8px;
-  background-color: #3490DC;
-  color: #fff;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-`;
-
-function LearnerChat() {
-  const [status, setStatus] = useState('');
-  const [questionText, setQuestionText] = useState('');
-  const [questions, setQuestions] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [replies, setReplies] = useState({});
+const LeanerChat = ({ clientId }) => {
   const [message, setMessage] = useState('');
-  const [visibleReplies, setVisibleReplies] = useState({}); // To track visible replies
+  const [chat, setChat] = useState(null);
+  const [mentors, setMentors] = useState([]);
+  const [selectedMentor, setSelectedMentor] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const token = ''; // Place your JWT token here
 
   useEffect(() => {
-    const fetchStatus = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/request/status', {
+        const mentorsResponse = await axios.get('http://localhost:5000/api/detail/user/details', {
           headers: { Authorization: `Bearer ${localStorage.getItem('Token')}` },
         });
-        setStatus(response.data.status);
+        setMentors(mentorsResponse.data);
       } catch (error) {
-        console.error('Error fetching status:', error);
+        if (error.response && error.response.status === 401) {
+          console.log('Unauthorized access. Redirect to login page.');
+        } else {
+          console.error('Error fetching data:', error);
+        }
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchStatus();
-  }, []);
+    fetchData();
+  }, [token]);
 
-  const handleQuestionChange = (event) => {
-    setQuestionText(event.target.value);
-  };
-
-  const handleSendQuestion = async () => {
-    setLoading(true);
+  const fetchChat = async () => {
     try {
-      await axios.post('http://localhost:5000/api/questions/ask', { message: questionText }, {
+      const response = await axios.get(`http://localhost:5000/api/chat/get`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('Token')}` },
       });
-      console.log('Question sent successfully');
-      setQuestionText('');
-      fetchQuestions();
+      setChat(response.data);
     } catch (error) {
-      console.error('Error sending question:', error);
-    } finally {
-      setLoading(false);
+      console.error('Error fetching chat:', error);
     }
   };
 
-  useEffect(() => {
-    fetchQuestions();
-  }, []);
-
-  const fetchQuestions = async () => {
+  const sendMessage = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/questions/view', {
+      await axios.post('http://localhost:5000/api/chat/send', {
+        mentorId: selectedMentor._id,
+        message
+      }, {
         headers: { Authorization: `Bearer ${localStorage.getItem('Token')}` },
       });
-      setQuestions(response.data);
+      setMessage('');
+      fetchChat(); // Refresh chat after sending message
     } catch (error) {
-      console.error('Error fetching questions:', error);
+      console.error('Error sending message:', error);
     }
   };
 
-  const handleReply = async (questionId) => {
-    try {
-      const response = await axios.put(
-        `http://localhost:5000/api/questions/reply/${questionId}`,
-        { reply: message },
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem('Token')}` },
-        }
-      );
-      console.log('Reply sent successfully:', response.data);
-      const updatedReplies = { ...replies, [questionId]: message };
-      setReplies(updatedReplies);
-      setMessage(''); // Clear the message after sending the reply
-    } catch (error) {
-      console.error('Error replying to question:', error);
-    }
-  };
-
-  const toggleRepliesVisibility = (questionId) => {
-    setVisibleReplies((prevState) => ({
-      ...prevState,
-      [questionId]: !prevState[questionId],
-    }));
+  const handleMentorSelect = (mentor) => {
+    setSelectedMentor(mentor);
   };
 
   return (
-    <ChatContainer>
-      <div className="h-screen bg-gradient-to-r from-gray-300 to-orange-200 p-6">
-        <div className="flex justify-between mb-6">
-          {status === 'accepted' ? (
-            <>
-              <input
-                type="text"
-                placeholder="Ask a question..."
-                value={questionText}
-                onChange={handleQuestionChange}
-                className="p-2 rounded-md w-3/4 bg-gray-100"
-              />
-              <Button className="py-3 px-8 rounded-md text-white" onClick={handleSendQuestion}>
-                {loading ? 'Sending...' : 'Send'}
-              </Button>
-            </>
-          ) : (
-            <p className="text-gray-800">Your request is not accepted yet. Status: {status}</p>
+    <div className="container mx-auto px-4 py-8">
+      <h2 className="text-2xl font-bold mb-4">Select a Mentor and Chat</h2>
+      {loading ? (
+        <p className="text-gray-600">Loading...</p>
+      ) : (
+        <div>
+          <h3 className="text-lg font-semibold mb-2">Mentors:</h3>
+          <ul className="mb-4">
+            {mentors.map((mentor) => (
+              <li key={mentor._id} className="flex items-center justify-between py-2 border-b border-gray-300">
+                <span>{mentor.firstName} {mentor.lastName}</span>
+                <button
+                  className="px-4 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                  onClick={() => handleMentorSelect(mentor)}
+                >
+                  Select
+                </button>
+              </li>
+            ))}
+          </ul>
+          {selectedMentor && (
+            <div>
+              <h3 className="text-lg font-semibold mb-2">Chat with {selectedMentor.firstName} {selectedMentor.lastName}</h3>
+              <div className="mb-4">
+                {chat && chat.messages.map((msg, index) => (
+                  <div key={index} className="mb-2">
+                    <p className="font-semibold">{msg.sender.firstName} {msg.sender.lastName}: {msg.message}</p>
+                    <small className="text-xs text-gray-500">{new Date(msg.timestamp).toLocaleString()}</small>
+                  </div>
+                ))}
+              </div>
+              <div className="flex">
+                <input
+                  type="text"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  className="flex-1 border border-gray-300 px-4 py-2 rounded-l-md focus:outline-none focus:border-blue-500"
+                />
+                <button
+                  onClick={sendMessage}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-r-md hover:bg-blue-600"
+                >
+                  Send
+                </button>
+              </div>
+            </div>
           )}
         </div>
-
-        {questions.map((question) => (
-          <div key={question._id}>
-            <QuestionWrapper>
-              <p className="font-bold font-inter">Question</p>
-              <p>{question.message}</p>
-              <Button onClick={() => toggleRepliesVisibility(question._id)}>
-                {visibleReplies[question._id] ? <FaChevronUp /> : <FaChevronDown />}
-              </Button>
-            </QuestionWrapper>
-            {visibleReplies[question._id] && question.replies.map((reply) => (
-              <ReplyWrapper key={reply._id}>
-                <p>{reply.message}</p>
-              </ReplyWrapper>
-            ))}
-
-            {!replies[question._id] && (
-              <>
-                <ReplyWrapper>
-                  <textarea
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder="Type your reply..."
-                    className="border border-gray-300 rounded p-2 mt-4"
-                  />
-                  <Button onClick={() => handleReply(question._id)}>
-                    Reply
-                  </Button>
-                </ReplyWrapper>
-              </>
-            )}
-          </div>
-        ))}
-      </div>
-    </ChatContainer>
+      )}
+    </div>
   );
-}
+};
 
-export default LearnerChat;
+export default LeanerChat;

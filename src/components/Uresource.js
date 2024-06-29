@@ -48,6 +48,13 @@ function Uresource() {
           Read Article
         </a>
       );
+}
+ else if (resource.type === 'Module') {
+      return (
+        <a href={`http://localhost:5000${resource.moduleUrl}`} target="_blank" rel="noopener noreferrer">
+          Read Article
+        </a>
+      );
     } else if (resource.type === 'Webinar') {
       return (
         <div>

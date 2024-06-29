@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaUserPlus, FaSearch, FaUser } from 'react-icons/fa';
+import { FaUser } from 'react-icons/fa';
 import LOGO from "../Assets/loading.gif";
 
 const MentorRequests = () => {
@@ -9,42 +9,48 @@ const MentorRequests = () => {
   const token = localStorage.getItem('Token');
 
   useEffect(() => {
-    const fetchRequests = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/api/requests', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        console.log('Response:', response.data);
-        setRequests(response.data);
-      } catch (error) {
-        console.error('Error fetching requests:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchRequests();
   }, [token]);
 
+  const fetchRequests = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/requests', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setRequests(response.data);
+    } catch (error) {
+      console.error('Error fetching requests:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const updateRequestStatus = async (requestId, status) => {
     try {
-      const response = await axios.put(
+      await axios.put(
         `http://localhost:5000/api/requests/${requestId}`,
         { status },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-      console.log('Request status updated:', response.data);
-      // Optionally, you can update state or show a notification on successful status update
+      // Update the local state to reflect the changes
+      setRequests((prevRequests) =>
+        prevRequests.map((request) =>
+          request._id === requestId ? { ...request, status } : request
+        )
+      );
     } catch (error) {
       console.error('Error updating request status:', error);
-      // Handle error (e.g., show error message to user)
     }
   };
 
   if (loading) {
-    return  <div className="min-h-screen  bg-gradient-to-r from-gray-300 to-orange-200 flex items-center justify-center"><img src={LOGO} alt="logo"  /></div>;
+    return (
+      <div className="min-h-screen bg-gradient-to-r from-gray-300 to-orange-200 flex items-center justify-center">
+        <img src={LOGO} alt="logo" />
+      </div>
+    );
   }
 
   return (
@@ -105,18 +111,24 @@ const MentorRequests = () => {
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
-                    <button
-                      onClick={() => updateRequestStatus(request._id, 'accepted')}
-                      className="text-green-600 hover:text-green-900"
-                    >
-                      Accept
-                    </button>
-                    <button
-                      onClick={() => updateRequestStatus(request._id, 'declined')}
-                      className="ml-2 text-red-600 hover:text-red-900"
-                    >
-                      Decline
-                    </button>
+                    {request.status === 'accepted' ? (
+                      <span className="text-gray-500">Done</span>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() => updateRequestStatus(request._id, 'accepted')}
+                          className="text-green-600 hover:text-green-900"
+                        >
+                          Accept
+                        </button>
+                        <button
+                          onClick={() => updateRequestStatus(request._id, 'declined')}
+                          className="ml-2 text-red-600 hover:text-red-900"
+                        >
+                          Decline
+                        </button>
+                      </>
+                    )}
                   </td>
                 </tr>
               ))}
