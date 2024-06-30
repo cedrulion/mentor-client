@@ -1,161 +1,194 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { FaReply, FaBell, FaEnvelopeOpen } from 'react-icons/fa';
-import Axios from 'axios';
-import { BsThreeDots } from 'react-icons/bs';
-import { RiDeleteBinLine } from 'react-icons/ri';
-
-const ChatContainer = styled.div`
-  max-width: 600px;
-  margin: 0 auto;
-`;
-
-const MessageWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 8px;
-`;
-
-const QuestionWrapper = styled(MessageWrapper)`
-  background-color: #F3F4F6;
-  align-items: flex-start;
-  position: relative;
-`;
-
-const ReplyWrapper = styled(MessageWrapper)`
-  background-color: #DCF8C6;
-  align-items: flex-end;
-`;
-
-const Button = styled.button`
-  margin-top: 8px;
-  background-color: #3490DC;
-  color: #fff;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-`;
-
-const NotificationIcon = styled.span`
-  position: absolute;
-  top: 5px;
-  right: 5px;
-`;
-const DeleteIcon = styled(RiDeleteBinLine)`
-  font-size: 9px;
-  color: #fff;
-`;
+import axios from 'axios';
 
 const Chat = () => {
-  const [questions, setQuestions] = useState([]);
-  const [replies, setReplies] = useState([]);
   const [message, setMessage] = useState('');
-  const [expandedQuestionId, setExpandedQuestionId] = useState(null);
-  const token = localStorage.getItem('Token');
-  
+  const [selectedClient, setSelectedClient] = useState(null);
+  const [clients, setClients] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedChat, setSelectedChat] = useState(null);
+  const [chatNotFound, setChatNotFound] = useState(false);
 
   useEffect(() => {
-    fetchQuestions();
-    const interval = setInterval(fetchQuestions, 5000);
-    return () => clearInterval(interval);
+    const fetchClients = async () => {
+      try {
+        const token = localStorage.getItem('Token');
+        const response = await axios.get('http://localhost:5000/api/chat/mentor', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setClients(response.data);
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          console.log('Unauthorized access. Redirect to login page.');
+        } else {
+          console.error('Error fetching clients:', error);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchClients();
   }, []);
 
-  const fetchQuestions = async () => {
+  const fetchChat = async (clientId) => {
     try {
-      const response = await Axios.get('http://localhost:5000/api/questions/view', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      const token = localStorage.getItem('Token');
+      const response = await axios.get(`http://localhost:5000/api/chat/mentors`, {
+        headers: { Authorization: `Bearer ${token}` },
       });
-      setQuestions(response.data);
+      setSelectedChat(response.data);
+      setChatNotFound(false);
     } catch (error) {
-      console.error('Error fetching questions:', error);
+      if (error.response && error.response.status === 404) {
+        setSelectedChat(null);
+        setChatNotFound(true);
+      } else {
+        console.error('Error fetching chat:', error);
+      }
     }
   };
 
-  const handleReply = async (questionId) => {
+  const replyMessage = async () => {
+    if (!selectedClient) {
+      console.error('No client selected. Please select a client before sending a message.');
+      return;
+    }
+
     try {
-      const response = await Axios.put(
-        `http://localhost:5000/api/questions/reply/${questionId}`,
-        {
-          reply: message,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const newReply = { message: response.data.message };
-      setReplies([...replies, newReply]);
+      const token = localStorage.getItem('Token');
+      await axios.post('http://localhost:5000/api/chat/mentor/reply', {
+        clientId: selectedClient._id,
+        message,
+      }, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setMessage('');
+      fetchChat(selectedClient._id);
     } catch (error) {
-      console.error('Error replying to question:', error);
+      console.error('Error sending message:', error);
     }
   };
 
-  const handleDeleteReply = async (questionId, replyId) => {
-    try {
-      await Axios.delete(
-        `http://localhost:5000/api/questions/questions/${questionId}/replies/${replyId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setReplies(replies.filter((reply) => reply._id !== replyId));
-    } catch (error) {
-      console.error('Error deleting reply:', error);
-    }
+  const handleClientSelect = (client) => {
+    setSelectedClient(client);
+    fetchChat(client._id);
   };
 
   return (
-    <ChatContainer className='p-9 m-9 font-Interi text-xl'>
-      <h1 className="text-2xl font-bold mb-4 text-center">Chat with Learners</h1>
-      {questions.map((question) => (
-        <QuestionWrapper key={question._id} className='p-9 m-9'>
-          <p>{question.message}</p>
-          <p><strong>From:</strong> {question.learnerFirstName}</p>
-          {expandedQuestionId === question._id ? (
-            <>
-              {question.replies.map((reply) => (
-                <ReplyWrapper key={reply._id}>
-                  <p>{reply.message}</p>
-                  
-                    
-                    <DeleteIcon onClick={() => handleDeleteReply(question._id, reply._id)} />
-                    
-                  
-                </ReplyWrapper>
-              ))}
-              <textarea
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Type your reply..."
-                className="border border-gray-300 rounded p-2 mt-4"
-              />
-              <Button onClick={() => handleReply(question._id)}>
-                Reply
-              </Button>
-            </>
-          ) : (
-            <NotificationIcon onClick={() => setExpandedQuestionId(question._id)}>
-              <div className='flex justify-between gap-3'>
-                <FaBell className='text-center text-rose-900 text-2xl'/>
-                <div>
-                  <FaEnvelopeOpen /><BsThreeDots /> 
-                </div>
-              </div>
-            </NotificationIcon>
+    <div style={styles.container}>
+      <h2 style={styles.heading}>Select a Client and Chat</h2>
+      {loading ? (
+        <p style={styles.loadingText}>Loading...</p>
+      ) : (
+        <div>
+          <h3 style={styles.subheading}>Clients:</h3>
+          <ul style={styles.list}>
+            {clients.map((client) => (
+              <li key={client._id} style={styles.listItem}>
+                <span>{client.firstName} {client.lastName}</span>
+                <button
+                  style={styles.button}
+                  onClick={() => handleClientSelect(client)}
+                >
+                  Select
+                </button>
+              </li>
+            ))}
+          </ul>
+          {chatNotFound && (
+            <p style={styles.notFoundText}>No chat found with {selectedClient?.firstName} {selectedClient?.lastName}. Start a new chat by sending a message.</p>
           )}
-        </QuestionWrapper>
-      ))}
-    </ChatContainer>
+          {selectedChat && (
+            <div style={styles.chatContainer}>
+              <h3 style={styles.subheading}>Chat with {selectedClient?.firstName} {selectedClient?.lastName}</h3>
+              <div style={styles.messagesContainer}>
+                {selectedChat.messages.map((msg, index) => (
+                  <div key={index} style={styles.messageItem}>
+                    <p style={styles.messageText}>{msg.message}</p>
+                    <small style={styles.timestamp}>{new Date(msg.timestamp).toLocaleString()}</small>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          <div style={styles.inputContainer}>
+            <input
+              type="text"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              style={styles.input}
+            />
+            <button onClick={replyMessage} style={styles.sendButton}>Send</button>
+          </div>
+        </div>
+      )}
+    </div>
   );
+};
+
+const styles = {
+  container: {
+    padding: '20px',
+    maxWidth: '600px',
+    margin: '0 auto',
+    backgroundColor: '#f5f5f5',
+    borderRadius: '10px'
+  },
+  heading: {
+    fontSize: '24px',
+    marginBottom: '20px'
+  },
+  subheading: {
+    fontSize: '20px',
+    marginBottom: '10px'
+  },
+  notFoundText: {
+    color: 'red',
+    marginBottom: '20px'
+  },
+  chatContainer: {
+    marginBottom: '20px'
+  },
+  messagesContainer: {
+    maxHeight: '400px',
+    overflowY: 'auto',
+    marginBottom: '20px'
+  },
+  messageItem: {
+    padding: '10px',
+    backgroundColor: '#e0e0e0',
+    borderRadius: '5px',
+    marginBottom: '10px'
+  },
+  messageText: {
+    marginBottom: '5px'
+  },
+  timestamp: {
+    fontSize: '12px',
+    color: '#555'
+  },
+  inputContainer: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  input: {
+    flex: '1',
+    padding: '10px',
+    fontSize: '16px',
+    marginRight: '10px',
+    borderRadius: '5px',
+    border: '1px solid #ccc'
+  },
+  sendButton: {
+    padding: '10px 20px',
+    fontSize: '16px',
+    backgroundColor: '#007bff',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer'
+  }
 };
 
 export default Chat;

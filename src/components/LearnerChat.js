@@ -3,49 +3,49 @@ import axios from 'axios';
 
 const LearnerChat = ({ clientId }) => {
   const [message, setMessage] = useState('');
-  const [chats, setChats] = useState([]);
-  const [selectedChat, setSelectedChat] = useState(null);
   const [selectedMentor, setSelectedMentor] = useState(null);
   const [mentors, setMentors] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedChat, setSelectedChat] = useState(null);
+  const [chatNotFound, setChatNotFound] = useState(false);
 
   useEffect(() => {
-    const fetchData = async (mentorId) => {
+    const fetchMentors = async () => {
       try {
         const token = localStorage.getItem('Token');
-        const mentorsResponse = await axios.get('http://localhost:5000/api/detail/user/details', {
+        const response = await axios.get('http://localhost:5000/api/detail/user/details', {
           headers: { Authorization: `Bearer ${token}` },
         });
-        setMentors(mentorsResponse.data);
-
-        const chatsResponse = await axios.get(`http://localhost:5000/api/chat/${clientId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        
+        setMentors(response.data);
       } catch (error) {
         if (error.response && error.response.status === 401) {
           console.log('Unauthorized access. Redirect to login page.');
         } else {
-          console.error('Error fetching data:', error);
+          console.error('Error fetching mentors:', error);
         }
       } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
-  }, [clientId]);
+    fetchMentors();
+  }, []);
 
   const fetchChat = async (mentorId) => {
     try {
       const token = localStorage.getItem('Token');
-      const response = await axios.get('http://localhost:5000/api/chat/${clientId}', {
+      const response = await axios.get(`http://localhost:5000/api/chat/get/${mentorId}`, {
         headers: { Authorization: `Bearer ${token}` },
-      
       });
       setSelectedChat(response.data);
+      setChatNotFound(false); // Reset the chatNotFound state
     } catch (error) {
-      console.error('Error fetching chat:', error);
+      if (error.response && error.response.status === 404) {
+        setSelectedChat(null);
+        setChatNotFound(true); // Set chatNotFound to true if the chat is not found
+      } else {
+        console.error('Error fetching chat:', error);
+      }
     }
   };
 
@@ -59,7 +59,7 @@ const LearnerChat = ({ clientId }) => {
       const token = localStorage.getItem('Token');
       await axios.post('http://localhost:5000/api/chat/send', {
         mentorId: selectedMentor._id,
-        message
+        message,
       }, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -70,97 +70,63 @@ const LearnerChat = ({ clientId }) => {
     }
   };
 
-  const deleteMessage = async (chatId, messageId) => {
-    try {
-      const token = localStorage.getItem('Token');
-      await axios.delete('http://localhost:5000/api/chat/delete-message', {
-        headers: { Authorization: `Bearer ${token}` },
-        data: { chatId, messageId }
-      });
-      fetchChat(selectedMentor._id); // Refresh chat after deleting message
-    } catch (error) {
-      console.error('Error deleting message:', error);
-    }
-  };
-
   const handleMentorSelect = (mentor) => {
     setSelectedMentor(mentor);
     fetchChat(mentor._id);
   };
 
-  const handleChatSelect = (chat) => {
-    setSelectedChat(chat);
-    setSelectedMentor(chat.mentor);
-  };
-
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="max-w-screen-md mx-auto bg-gray-100 p-4 rounded-lg">
       <h2 className="text-2xl font-bold mb-4">Select a Mentor and Chat</h2>
       {loading ? (
-        <p className="text-gray-600">Loading...</p>
+        <p className="text-lg text-gray-600">Loading...</p>
       ) : (
         <div>
-          <h3 className="text-lg font-semibold mb-2">Mentors:</h3>
+          <h3 className="text-xl font-bold mb-2">Mentors:</h3>
           <ul className="mb-4">
             {mentors.map((mentor) => (
-              <li key={mentor._id} className="flex items-center justify-between py-2 border-b border-gray-300">
+              <li key={mentor._id} className="flex items-center justify-between py-2 px-4 mb-2 bg-white rounded-lg shadow-sm">
                 <span>{mentor.firstName} {mentor.lastName}</span>
                 <button
-                  className="px-4 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                  onClick={() => handleChatSelect(chat.mentor)}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+                  onClick={() => handleMentorSelect(mentor)}
                 >
                   Select
                 </button>
               </li>
             ))}
           </ul>
-          <h3 className="text-lg font-semibold mb-2">Chats:</h3>
-          <ul className="mb-4">
-            {chats.map((chat) => (
-              <li key={chat._id} className="flex items-center justify-between py-2 border-b border-gray-300">
-                <span>Chat witho {chat.mentor.firstName} {chat.mentor.lastName}</span>
-                <button
-                  className="px-4 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                  onClick={() => handleChatSelect(chat)}
-                >
-                  View Chat
-                </button>
-              </li>
-            ))}
-          </ul>
+          {chatNotFound && (
+            <p className="text-red-500 mb-4">No chat found with {selectedMentor.firstName} {selectedMentor.lastName}. Start a new chat by sending a message.</p>
+          )}
           {selectedChat && (
-            <div>
-              <h3 className="text-lg font-semibold mb-2">Chat withh {selectedChat.mentor.firstName} {selectedChat.mentor.lastName}</h3>
-              <div className="mb-4">
+            <div className="mb-4">
+              <h3 className="text-xl font-bold mb-2">Chat with {selectedMentor.firstName} {selectedMentor.lastName}</h3>
+              <div className="max-h-300 overflow-y-auto p-4 bg-green-200 rounded-lg">
                 {selectedChat.messages.map((msg, index) => (
-                  <div key={index} className="mb-2">
-                    <p className="font-semibold">{msg.message}</p>
-                    <small className="text-xs text-gray-500">{new Date(msg.timestamp).toLocaleString()}</small>
-                    <button
-                      className="ml-2 px-2 py-1 bg-red-500 text-white rounded-md hover:bg-red-600"
-                      onClick={() => deleteMessage(selectedChat._id, msg._id)}
-                    >
-                      Delete
-                    </button>
+                  <div key={index} className="py-2 px-4 bg-white rounded-lg mb-2 shadow-sm">
+                    <p className="text-base">{msg.message}</p>
+                    <small className="text-xs text-gray-600">{new Date(msg.timestamp).toLocaleString()}</small>
                   </div>
                 ))}
               </div>
-              <div className="flex">
-                <input
-                  type="text"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  className="flex-1 border border-gray-300 px-4 py-2 rounded-l-md focus:outline-none focus:border-blue-500"
-                />
-                <button
-                  onClick={sendMessage}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-r-md hover:bg-blue-600"
-                >
-                  Send
-                </button>
-              </div>
             </div>
           )}
+          <div className="flex items-center">
+            <input
+              type="text"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className="flex-1 py-2 px-4 text-lg rounded-l-lg border-gray-300 border outline-none"
+              placeholder="Type your message..."
+            />
+            <button
+              onClick={sendMessage}
+              className="px-4 py-2 bg-blue-500 text-white rounded-r-lg cursor-pointer"
+            >
+              Send
+            </button>
+          </div>
         </div>
       )}
     </div>
