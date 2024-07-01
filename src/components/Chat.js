@@ -1,194 +1,117 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode'; // Correctly import jwtDecode as a named import
 
 const Chat = () => {
-  const [message, setMessage] = useState('');
-  const [selectedClient, setSelectedClient] = useState(null);
-  const [clients, setClients] = useState([]);
+  const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedChat, setSelectedChat] = useState(null);
-  const [chatNotFound, setChatNotFound] = useState(false);
+  const [error, setError] = useState('');
+  const [message, setMessage] = useState('');
 
-  useEffect(() => {
-    const fetchClients = async () => {
-      try {
-        const token = localStorage.getItem('Token');
-        const response = await axios.get('http://localhost:5000/api/chat/mentor', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setClients(response.data);
-      } catch (error) {
-        if (error.response && error.response.status === 401) {
-          console.log('Unauthorized access. Redirect to login page.');
-        } else {
-          console.error('Error fetching clients:', error);
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchClients();
-  }, []);
-
-  const fetchChat = async (clientId) => {
+  const fetchChats = async () => {
+    const token = localStorage.getItem('Token');
     try {
-      const token = localStorage.getItem('Token');
-      const response = await axios.get(`http://localhost:5000/api/chat/mentors`, {
+      const decodedToken = jwtDecode(token);
+      console.log('Decoded Token Data:', decodedToken); // Log the decoded token data
+
+      const response = await axios.get('http://localhost:5000/api/chat/mentor', {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setSelectedChat(response.data);
-      setChatNotFound(false);
-    } catch (error) {
-      if (error.response && error.response.status === 404) {
-        setSelectedChat(null);
-        setChatNotFound(true);
-      } else {
-        console.error('Error fetching chat:', error);
-      }
+      setChats(response.data);
+      setLoading(false);
+    } catch (err) {
+      setError('Error fetching chats.');
+      setLoading(false);
     }
   };
 
-  const replyMessage = async () => {
-    if (!selectedClient) {
-      console.error('No client selected. Please select a client before sending a message.');
+  useEffect(() => {
+    const token = localStorage.getItem('Token');
+    if (!token) {
+      setError('You must be logged in to view your chats.');
+      setLoading(false);
       return;
     }
 
+    fetchChats(); // Call fetchChats directly inside useEffect
+
+  }, []);
+
+  const handleReply = async (clientId, message) => {
+    const token = localStorage.getItem('Token');
     try {
-      const token = localStorage.getItem('Token');
-      await axios.post('http://localhost:5000/api/chat/mentor/reply', {
-        clientId: selectedClient._id,
+      const response = await axios.post('http://localhost:5000/api/chat/mentor/reply', {
+        clientId,
         message,
       }, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setMessage('');
-      fetchChat(selectedClient._id);
+      console.log('Reply sent:', response.data);
+      fetchChats(); // Optionally, fetch updated chats after replying
     } catch (error) {
-      console.error('Error sending message:', error);
+      console.error('Error sending reply:', error);
     }
   };
 
-  const handleClientSelect = (client) => {
-    setSelectedClient(client);
-    fetchChat(client._id);
-  };
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="text-red-500">{error}</div>
+      </div>
+    );
+  }
 
   return (
-    <div style={styles.container}>
-      <h2 style={styles.heading}>Select a Client and Chat</h2>
-      {loading ? (
-        <p style={styles.loadingText}>Loading...</p>
+    <div className="container mx-auto p-4">
+      <h2 className="text-2xl font-bold mb-4">All Chats</h2>
+      {chats.length === 0 ? (
+        <div className="bg-blue-100 text-blue-700 p-4 rounded-lg">No chats found.</div>
       ) : (
-        <div>
-          <h3 style={styles.subheading}>Clients:</h3>
-          <ul style={styles.list}>
-            {clients.map((client) => (
-              <li key={client._id} style={styles.listItem}>
-                <span>{client.firstName} {client.lastName}</span>
-                <button
-                  style={styles.button}
-                  onClick={() => handleClientSelect(client)}
-                >
-                  Select
-                </button>
-              </li>
-            ))}
-          </ul>
-          {chatNotFound && (
-            <p style={styles.notFoundText}>No chat found with {selectedClient?.firstName} {selectedClient?.lastName}. Start a new chat by sending a message.</p>
-          )}
-          {selectedChat && (
-            <div style={styles.chatContainer}>
-              <h3 style={styles.subheading}>Chat with {selectedClient?.firstName} {selectedClient?.lastName}</h3>
-              <div style={styles.messagesContainer}>
-                {selectedChat.messages.map((msg, index) => (
-                  <div key={index} style={styles.messageItem}>
-                    <p style={styles.messageText}>{msg.message}</p>
-                    <small style={styles.timestamp}>{new Date(msg.timestamp).toLocaleString()}</small>
-                  </div>
-                ))}
-              </div>
+        chats.map(chat => (
+          <div key={chat._id} className="bg-white shadow-md rounded-lg mb-4">
+            <div className="bg-gray-100 p-4 rounded-t-lg">
+             message
             </div>
-          )}
-          <div style={styles.inputContainer}>
-            <input
-              type="text"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              style={styles.input}
-            />
-            <button onClick={replyMessage} style={styles.sendButton}>Send</button>
+            <div className="p-4">
+              {chat.messages.map(message => (
+                <div
+                  key={message._id}
+                  className="p-3 mb-3 rounded-lg bg-blue-100 text-blue-900"
+                >
+                  <strong> {message.sender}:</strong> {message.message}
+                  <div className="text-xs text-gray-500">
+                    {new Date(message.timestamp).toLocaleString()}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="p-4">
+              <input
+                type="text"
+                placeholder="Type your reply..."
+                className="border border-gray-300 rounded-lg px-3 py-2 w-full mb-2"
+                onChange={(e) => setMessage(e.target.value)}
+              />
+              <button
+                className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg"
+                onClick={() => handleReply(chat.client?._id, message)}
+              >
+                Reply
+              </button>
+            </div>
           </div>
-        </div>
+        ))
       )}
     </div>
   );
-};
-
-const styles = {
-  container: {
-    padding: '20px',
-    maxWidth: '600px',
-    margin: '0 auto',
-    backgroundColor: '#f5f5f5',
-    borderRadius: '10px'
-  },
-  heading: {
-    fontSize: '24px',
-    marginBottom: '20px'
-  },
-  subheading: {
-    fontSize: '20px',
-    marginBottom: '10px'
-  },
-  notFoundText: {
-    color: 'red',
-    marginBottom: '20px'
-  },
-  chatContainer: {
-    marginBottom: '20px'
-  },
-  messagesContainer: {
-    maxHeight: '400px',
-    overflowY: 'auto',
-    marginBottom: '20px'
-  },
-  messageItem: {
-    padding: '10px',
-    backgroundColor: '#e0e0e0',
-    borderRadius: '5px',
-    marginBottom: '10px'
-  },
-  messageText: {
-    marginBottom: '5px'
-  },
-  timestamp: {
-    fontSize: '12px',
-    color: '#555'
-  },
-  inputContainer: {
-    display: 'flex',
-    alignItems: 'center'
-  },
-  input: {
-    flex: '1',
-    padding: '10px',
-    fontSize: '16px',
-    marginRight: '10px',
-    borderRadius: '5px',
-    border: '1px solid #ccc'
-  },
-  sendButton: {
-    padding: '10px 20px',
-    fontSize: '16px',
-    backgroundColor: '#007bff',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer'
-  }
 };
 
 export default Chat;

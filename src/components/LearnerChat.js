@@ -58,13 +58,13 @@ const LearnerChat = ({ clientId }) => {
     try {
       const token = localStorage.getItem('Token');
       await axios.post('http://localhost:5000/api/chat/send', {
-        mentorId: selectedMentor._id,
+        mentorId: selectedMentor.user,
         message,
       }, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setMessage('');
-      fetchChat(selectedMentor._id); // Refresh chat after sending message
+      fetchChat(selectedMentor.user); // Refresh chat after sending message
     } catch (error) {
       console.error('Error sending message:', error);
     }
@@ -72,7 +72,7 @@ const LearnerChat = ({ clientId }) => {
 
   const handleMentorSelect = (mentor) => {
     setSelectedMentor(mentor);
-    fetchChat(mentor._id);
+    fetchChat(mentor.user);
   };
 
   return (

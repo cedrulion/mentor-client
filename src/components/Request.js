@@ -15,6 +15,8 @@ const Request = () => {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [userExperiences, setUserExperiences] = useState([]);
   const [loggedInUser, setLoggedInUser] = useState(null); // State for logged-in user's details
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [reviewText, setReviewText] = useState('');
   const token = localStorage.getItem('Token');
 
   useEffect(() => {
@@ -45,6 +47,26 @@ const Request = () => {
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
+  };
+const handleReviewSubmit = async () => {
+    try {
+      const response = await axios.put(
+        `http://localhost:5000/api/detail/mentors/${selectedUser.user}/review`,
+        {
+          review: reviewText,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      console.log('Review submitted successfully:', response.data);
+      setShowReviewModal(false);
+      setReviewText('');
+      // Optionally handle success message or state update
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      // Optionally handle error message or state update
+    }
   };
 
   const filteredMentors = mentors.filter(
@@ -112,6 +134,29 @@ const Request = () => {
       </div>
     </div>
   );
+const ReviewModal = ({ onClose }) => (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-white p-6 rounded-md shadow-md">
+        <h3 className="text-xl font-bold mb-4">Add Review</h3>
+        <textarea
+          value={reviewText}
+          onChange={(e) => setReviewText(e.target.value)}
+          className="w-full p-2 mb-4 border rounded-md"
+          rows="4"
+          placeholder="Write your review here..."
+        />
+        <div className="flex justify-end">
+          <button className="bg-gray-400 px-3 py-1 rounded-md mr-2" onClick={onClose}>
+            Cancel
+          </button>
+          <button className="bg-blue-600 text-white px-3 py-1 rounded-md" onClick={handleReviewSubmit}>
+            Submit
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
 
   if (loading) {
     return (
@@ -208,6 +253,12 @@ const Request = () => {
             >
               Request Session
             </button>
+<button
+                onClick={() => setShowReviewModal(true)}
+                className="bg-red-900 text-white px-4 py-2 ml-4 rounded-md"
+              >
+                Add Review
+              </button>
           </div>
         </div>
       ) : (
@@ -243,6 +294,9 @@ const Request = () => {
             sendRequest(selectedUser.user);
           }}
         />
+      )}
+{showReviewModal && (
+        <ReviewModal onClose={() => setShowReviewModal(false)} />
       )}
     </div>
   );
