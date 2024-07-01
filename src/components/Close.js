@@ -1,8 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaUserPlus, FaSearch, FaUser, FaArrowLeft } from 'react-icons/fa';
-import { FiUser } from 'react-icons/fi';
 import LOGO from "../Assets/loading.gif";
+
+const StarRating = ({ rating, setRating }) => {
+  return (
+    <div className="flex justify-center mb-4">
+      {[...Array(5)].map((_, index) => {
+        const starValue = index + 1;
+        return (
+          <button
+            key={index}
+            type="button"
+            onClick={() => setRating(starValue)}
+            className={`text-3xl ${starValue <= rating ? "text-yellow-500" : "text-gray-300"}`}
+          >
+            &#9733;
+          </button>
+        );
+      })}
+    </div>
+  );
+};
 
 const Close = () => {
   const [classType, setClassType] = useState('');
@@ -15,6 +34,7 @@ const Close = () => {
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [reviewText, setReviewText] = useState('');
+  const [rating, setRating] = useState(0); // State for star rating
   const [userExperiences, setUserExperiences] = useState([]);
   const [loggedInUser, setLoggedInUser] = useState(null); // State for logged-in user's details
   const token = localStorage.getItem('Token');
@@ -55,12 +75,14 @@ const Close = () => {
       !ignoredMentors.includes(mentor.user) &&
       loggedInUser && mentor.city === loggedInUser.city // Matching studyField
   );
-const handleReviewSubmit = async () => {
+
+  const handleReviewSubmit = async () => {
     try {
       const response = await axios.put(
         `http://localhost:5000/api/detail/mentors/${selectedUser.user}/review`,
         {
           review: reviewText,
+          rating: rating // Send rating along with review text
         },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -69,12 +91,14 @@ const handleReviewSubmit = async () => {
       console.log('Review submitted successfully:', response.data);
       setShowReviewModal(false);
       setReviewText('');
+      setRating(0); // Reset rating after submission
       // Optionally handle success message or state update
     } catch (error) {
       console.error('Error submitting review:', error);
       // Optionally handle error message or state update
     }
   };
+
   const sendRequest = async (mentorId) => {
     try {
       const response = await axios.post(
@@ -143,6 +167,7 @@ const handleReviewSubmit = async () => {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-6 rounded-md shadow-md">
         <h3 className="text-xl font-bold mb-4">Add Review</h3>
+        <StarRating rating={rating} setRating={setRating} />
         <textarea
           value={reviewText}
           onChange={(e) => setReviewText(e.target.value)}
@@ -190,11 +215,10 @@ const handleReviewSubmit = async () => {
       </div>
       {selectedUser ? (
         <div className="bg-gradient-to-r from-gray-400 to-orange-200 h-screen rounded-md shadow-md p-4">
-         <div className="flex cursor-pointer" onClick={() => setSelectedUser(null)}>
-              <FaArrowLeft className="text-gray-900 rounded-lg text-xl text-center" />
-            </div>
+          <div className="flex cursor-pointer" onClick={() => setSelectedUser(null)}>
+            <FaArrowLeft className="text-gray-900 rounded-lg text-xl text-center" />
+          </div>
           <div className="flex flex-col items-center">
-            
             <h2 className="text-3xl font-bold mt-4">
               {selectedUser.firstName} {selectedUser.lastName}
             </h2>
@@ -258,12 +282,12 @@ const handleReviewSubmit = async () => {
             >
               Request Session
             </button>
-             <button
-                onClick={() => setShowReviewModal(true)}
-                className="bg-red-900 text-white px-4 py-2 ml-4 rounded-md"
-              >
-                Add Review
-              </button>
+            <button
+              onClick={() => setShowReviewModal(true)}
+              className="bg-red-900 text-white px-4 py-2 ml-4 rounded-md"
+            >
+              Add Review
+            </button>
           </div>
         </div>
       ) : (
@@ -301,7 +325,7 @@ const handleReviewSubmit = async () => {
           }}
         />
       )}
-{showReviewModal && (
+      {showReviewModal && (
         <ReviewModal onClose={() => setShowReviewModal(false)} />
       )}
     </div>

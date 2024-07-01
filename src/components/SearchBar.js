@@ -14,7 +14,7 @@ const SearchBar = () => {
   const [classTime, setClassTime] = useState('');
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [userExperiences, setUserExperiences] = useState([]);
-const [showReviewModal, setShowReviewModal] = useState(false);
+  const [showReviewModal, setShowReviewModal] = useState(false);
   const [reviewText, setReviewText] = useState('');
   const token = localStorage.getItem('Token');
 
@@ -42,7 +42,8 @@ const [showReviewModal, setShowReviewModal] = useState(false);
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
-const handleReviewSubmit = async () => {
+
+  const handleReviewSubmit = async () => {
     try {
       const response = await axios.put(
         `http://localhost:5000/api/detail/mentors/${selectedUser.user}/review`,
@@ -56,12 +57,11 @@ const handleReviewSubmit = async () => {
       console.log('Review submitted successfully:', response.data);
       setShowReviewModal(false);
       setReviewText('');
-      // Optionally handle success message or state update
     } catch (error) {
       console.error('Error submitting review:', error);
-      // Optionally handle error message or state update
     }
   };
+
   const handleMentorClick = async (mentor) => {
     try {
       const response = await axios.get(`http://localhost:5000/api/detail/user/detail/${mentor.user}`, {
@@ -128,7 +128,8 @@ const handleReviewSubmit = async () => {
       </div>
     </div>
   );
-const ReviewModal = ({ onClose }) => (
+
+  const ReviewModal = ({ onClose }) => (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-6 rounded-md shadow-md">
         <h3 className="text-xl font-bold mb-4">Add Review</h3>
@@ -255,7 +256,7 @@ const ReviewModal = ({ onClose }) => (
         </div>
       ) : (
         <div className="min-h-screen bg-gray-200 rounded-md shadow-md overflow-hidden">
-          <h1 className="flex justify-center font-bold text-xl text-red-700 font-poppins">Close to you</h1>
+          <h1 className="flex justify-center font-bold text-xl text-red-700 font-poppins">Suggestions</h1>
           <div className="grid grid-cols-3 gap-4 p-4">
             {mentors.map((mentor) => (
               <div
@@ -284,8 +285,10 @@ const ReviewModal = ({ onClose }) => (
                           {renderStars(review.review)}
                         
                         </div>
-
                       ))}
+                      <div className="flex items-center ml-2 font-bold">
+                        Reviews({mentor.reviews.reduce((acc, review) => acc + review.review, 0)})
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -305,7 +308,7 @@ const ReviewModal = ({ onClose }) => (
           }}
         />
       )}
-{showReviewModal && (
+      {showReviewModal && (
         <ReviewModal onClose={() => setShowReviewModal(false)} />
       )}
     </div>
