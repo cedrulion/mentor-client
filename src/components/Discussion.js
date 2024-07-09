@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Forum from './Forum';
-i
 import { FaCommentDots, FaPlusCircle, FaMinusCircle } from 'react-icons/fa'; // Import icons for comments and add
+import Forum from './Forum';
 import CommentsModal from './CommentsModal'; // Import the CommentsModal component
 
 function Discussion() {
