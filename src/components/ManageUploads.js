@@ -42,10 +42,7 @@ const styles = {
 };
 
 function ManageUploads() {
-  const [title, setTitle] = useState('');
-  const [date, setDate] = useState('');
-  const [description, setDescription] = useState('');
-  const [type, setType] = useState('Webinar');
+ 
   const [resources, setResources] = useState([]);
   const [token, setToken] = useState('');
   const [loading, setLoading] = useState(false);
