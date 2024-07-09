@@ -21,7 +21,7 @@ const SearchBar = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const mentorsResponse = await axios.get('http://localhost:5000/api/detail/user/details', {
+        const mentorsResponse = await axios.get('https://mentor-server-qd42.onrender.com/api/detail/user/details', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setMentors(mentorsResponse.data);
@@ -46,7 +46,7 @@ const SearchBar = () => {
   const handleReviewSubmit = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:5000/api/detail/mentors/${selectedUser.user}/review`,
+        `https://mentor-server-qd42.onrender.com/api/detail/mentors/${selectedUser.user}/review`,
         {
           review: reviewText,
         },
@@ -64,7 +64,7 @@ const SearchBar = () => {
 
   const handleMentorClick = async (mentor) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/detail/user/detail/${mentor.user}`, {
+      const response = await axios.get(`https://mentor-server-qd42.onrender.com/api/detail/user/detail/${mentor.user}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setSelectedUser(response.data);
@@ -76,7 +76,7 @@ const SearchBar = () => {
 
   const fetchUserExperiences = async (userId) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/experience/${userId}`, {
+      const response = await axios.get(`https://mentor-server-qd42.onrender.com/api/experience/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUserExperiences(response.data.data);
@@ -101,7 +101,7 @@ const SearchBar = () => {
   const sendRequest = async (mentorId) => {
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/requests/${mentorId}`,
+        `https://mentor-server-qd42.onrender.com/api/requests/${mentorId}`,
         { classType, classTime },
         {
           headers: { Authorization: `Bearer ${token}` },

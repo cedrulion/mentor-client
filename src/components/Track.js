@@ -14,7 +14,7 @@ const Track = () => {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/learner-requests', {
+        const response = await axios.get('https://mentor-server-qd42.onrender.com/api/learner-requests', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setRequests(response.data);

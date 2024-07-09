@@ -45,7 +45,7 @@ const SignUp = () => {
     if (validateForm()) {
       console.log('Form data:', formData); // Add this line for debugging
       try {
-        await axios.post('http://localhost:5000/api/auth/signup', formData);
+        await axios.post('https://mentor-server-qd42.onrender.com/api/auth/signup', formData);
         console.log('Signup successful');
         alert('Signup successful!');
         navigate('/signin');

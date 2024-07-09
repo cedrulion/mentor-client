@@ -11,7 +11,7 @@ const Mydetails = () => {
   useEffect(() => {
     const fetchUserDetail = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/detail/getdetail', {
+        const response = await axios.get('https://mentor-server-qd42.onrender.com/api/detail/getdetail', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUserDetail(response.data);

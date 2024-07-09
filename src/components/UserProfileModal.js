@@ -9,7 +9,7 @@ const UserProfileModal = ({ userId, onClose }) => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/user/${userId}`, {
+        const response = await axios.get(`https://mentor-server-qd42.onrender.com/api/user/${userId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUserData(response.data.data.User);

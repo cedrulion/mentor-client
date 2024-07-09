@@ -16,7 +16,7 @@ function Uresource() {
 
   const fetchResources = async () => {
     try {
-      const response = await Axios.get('http://localhost:5000/api/resources');
+      const response = await Axios.get('https://mentor-server-qd42.onrender.com/api/resources');
       setResources(response.data);
     } catch (error) {
       console.error('Error fetching resources:', error);
@@ -37,21 +37,21 @@ function Uresource() {
       return (
         <div>
           <video controls width="400">
-              <source src={`http://localhost:5000${resource.videoUrl}`} type="video/mp4" />
+              <source src={`https://mentor-server-qd42.onrender.com${resource.videoUrl}`} type="video/mp4" />
               Your browser does not support the video tag.
           </video>
         </div>
       );
     } else if (resource.type === 'Article') {
       return (
-        <a href={`http://localhost:5000${resource.articleUrl}`} target="_blank" rel="noopener noreferrer">
+        <a href={`https://mentor-server-qd42.onrender.com${resource.articleUrl}`} target="_blank" rel="noopener noreferrer">
           Read Article
         </a>
       );
 }
  else if (resource.type === 'Module') {
       return (
-        <a href={`http://localhost:5000${resource.moduleUrl}`} target="_blank" rel="noopener noreferrer">
+        <a href={`https://mentor-server-qd42.onrender.com${resource.moduleUrl}`} target="_blank" rel="noopener noreferrer">
           Read Article
         </a>
       );

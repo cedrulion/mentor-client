@@ -13,7 +13,7 @@ const LearnerChat = ({ clientId }) => {
     const fetchMentors = async () => {
       try {
         const token = localStorage.getItem('Token');
-        const response = await axios.get('http://localhost:5000/api/detail/user/details', {
+        const response = await axios.get('https://mentor-server-qd42.onrender.com/api/detail/user/details', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setMentors(response.data);
@@ -34,7 +34,7 @@ const LearnerChat = ({ clientId }) => {
   const fetchChat = async (mentorId) => {
     try {
       const token = localStorage.getItem('Token');
-      const response = await axios.get(`http://localhost:5000/api/chat/get/${mentorId}`, {
+      const response = await axios.get(`https://mentor-server-qd42.onrender.com/api/chat/get/${mentorId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setSelectedChat(response.data);
@@ -57,7 +57,7 @@ const LearnerChat = ({ clientId }) => {
 
     try {
       const token = localStorage.getItem('Token');
-      await axios.post('http://localhost:5000/api/chat/send', {
+      await axios.post('https://mentor-server-qd42.onrender.com/api/chat/send', {
         mentorId: selectedMentor.user,
         message,
       }, {

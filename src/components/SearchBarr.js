@@ -19,7 +19,7 @@ const SearchBarr = ({ onStartChat }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const mentorsResponse = await axios.get('http://localhost:5000/api/detail/user/details', {
+        const mentorsResponse = await axios.get('https://mentor-server-qd42.onrender.com/api/detail/user/details', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setMentors(mentorsResponse.data);
@@ -73,7 +73,7 @@ const SearchBarr = ({ onStartChat }) => {
 
   const viewDetail = async (userId) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/detail/user/detail/${userId}`, {
+      const response = await axios.get(`https://mentor-server-qd42.onrender.com/api/detail/user/detail/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setSelectedUser(response.data);
@@ -85,7 +85,7 @@ const SearchBarr = ({ onStartChat }) => {
 
   const fetchUserExperiences = async (userId) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/experience/${userId}`, {
+      const response = await axios.get(`https://mentor-server-qd42.onrender.com/api/experience/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUserExperiences(response.data.data);

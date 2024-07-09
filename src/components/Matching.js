@@ -17,7 +17,7 @@ function Matching() {
   // Function to fetch status from backend
   const fetchStatus = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/status'); 
+      const response = await axios.get('https://mentor-server-qd42.onrender.com/api/status'); 
       setIsEnabled(response.data.isEnabled);
     } catch (error) {
       console.error('Error fetching status:', error);
@@ -27,7 +27,7 @@ function Matching() {
   // Function to enable status
   const enableStatus = async () => {
     try {
-      await axios.post('http://localhost:5000/api/status/enable'); 
+      await axios.post('https://mentor-server-qd42.onrender.com/api/status/enable'); 
       setIsEnabled(true);
     } catch (error) {
       console.error('Error enabling status:', error);
@@ -37,7 +37,7 @@ function Matching() {
   // Function to disable status
   const disableStatus = async () => {
     try {
-      await axios.post('http://localhost:5000/api/status/disable');
+      await axios.post('https://mentor-server-qd42.onrender.com/api/status/disable');
       setIsEnabled(false);
     } catch (error) {
       console.error('Error disabling status:', error);

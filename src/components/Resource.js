@@ -92,7 +92,7 @@ function Resource() {
   const fetchResources = async () => {
     try {
       setLoading(true);
-      const response = await Axios.get('http://localhost:5000/api/resources', {
+      const response = await Axios.get('https://mentor-server-qd42.onrender.com/api/resources', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setResources(response.data);
@@ -134,7 +134,7 @@ function Resource() {
     }
 
     try {
-      const response = await Axios.post('http://localhost:5000/api/resources', formData, {
+      const response = await Axios.post('https://mentor-server-qd42.onrender.com/api/resources', formData, {
         headers: { Authorization: `Bearer ${token}` },
         'Content-Type': 'multipart/form-data',
       });
@@ -159,7 +159,7 @@ function Resource() {
 
     try {
       setLoading(true);
-      await Axios.delete(`http://localhost:5000/api/resources/${id}`, {
+      await Axios.delete(`https://mentor-server-qd42.onrender.com/api/resources/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setResources(resources.filter((resource) => resource._id !== id));
@@ -191,7 +191,7 @@ function Resource() {
         return (
           <div>
             <video controls width="400">
-              <source src={`http://localhost:5000${resource.videoUrl}`} type="video/mp4" />
+              <source src={`https://mentor-server-qd42.onrender.com${resource.videoUrl}`} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           </div>
@@ -200,7 +200,7 @@ function Resource() {
         return (
           <div>
             <button
-              onClick={() => printIframeContent(`http://localhost:5000${resource.articleUrl}`)}
+              onClick={() => printIframeContent(`https://mentor-server-qd42.onrender.com${resource.articleUrl}`)}
               style={styles.button}
             >
               Print
@@ -211,7 +211,7 @@ function Resource() {
         return (
           <div>
             <button
-              onClick={() => printIframeContent(`http://localhost:5000${resource.moduleUrl}`)}
+              onClick={() => printIframeContent(`https://mentor-server-qd42.onrender.com${resource.moduleUrl}`)}
               style={styles.button}
             >
               Print

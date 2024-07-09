@@ -29,7 +29,7 @@ function Alogin() {
         setError(null);
 
         // Send login request to backend
-        const response = await axios.post('http://localhost:5000/api/auth/signin', { email, password });
+        const response = await axios.post('https://mentor-server-qd42.onrender.com/api/auth/signin', { email, password });
 
         // Assuming a successful response here
         const { data } = response;

@@ -28,7 +28,7 @@ const Profilee = ({ onClose }) => {
 
   const fetchUserExperiences = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/experience/${userDetail?.user}`, {
+      const response = await axios.get(`https://mentor-server-qd42.onrender.com/api/experience/${userDetail?.user}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setExperiences(response.data.data);
@@ -42,7 +42,7 @@ const Profilee = ({ onClose }) => {
 
   const fetchPosts = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/resources', {
+      const response = await axios.get('https://mentor-server-qd42.onrender.com/api/resources', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setPosts(response.data.reverse());
@@ -55,7 +55,7 @@ const Profilee = ({ onClose }) => {
   useEffect(() => {
     const fetchUserDetail = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/detail/getdetail', {
+        const response = await axios.get('https://mentor-server-qd42.onrender.com/api/detail/getdetail', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUserDetail(response.data);
@@ -102,7 +102,7 @@ const Profilee = ({ onClose }) => {
 
   const handleAddExperience = async () => {
     try {
-      await axios.post('http://localhost:5000/api/experience', {
+      await axios.post('https://mentor-server-qd42.onrender.com/api/experience', {
         userId: userDetail?.user,
         ...newExperience,
       }, {
@@ -118,7 +118,7 @@ const Profilee = ({ onClose }) => {
 
   const handleEditExperience = async (experienceId, updatedExperience) => {
     try {
-      await axios.put(`http://localhost:5000/api/experience/${experienceId}`, updatedExperience, {
+      await axios.put(`https://mentor-server-qd42.onrender.com/api/experience/${experienceId}`, updatedExperience, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -130,7 +130,7 @@ const Profilee = ({ onClose }) => {
 
   const handleDeleteExperience = async (experienceId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/experience/${experienceId}`, {
+      await axios.delete(`https://mentor-server-qd42.onrender.com/api/experience/${experienceId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

@@ -76,7 +76,7 @@ function ManageUploads() {
   const fetchResources = async () => {
     try {
       setLoading(true);
-      const response = await Axios.get('http://localhost:5000/api/resources', {
+      const response = await Axios.get('https://mentor-server-qd42.onrender.com/api/resources', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setResources(response.data);
@@ -106,7 +106,7 @@ function ManageUploads() {
     }
 
     try {
-      const response = await Axios.post('http://localhost:5000/api/resources', formData, {
+      const response = await Axios.post('https://mentor-server-qd42.onrender.com/api/resources', formData, {
         headers: { Authorization: `Bearer ${token}` },
         'Content-Type': 'multipart/form-data',
       });
@@ -132,7 +132,7 @@ function ManageUploads() {
 
     try {
       setLoading(true);
-      await Axios.delete(`http://localhost:5000/api/resources/${id}`, {
+      await Axios.delete(`https://mentor-server-qd42.onrender.com/api/resources/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setResources(resources.filter((resource) => resource._id !== id));
@@ -163,7 +163,7 @@ function ManageUploads() {
         return (
           <div>
             <video controls width="400">
-              <source src={`http://localhost:5000${resource.videoUrl}`} type="video/mp4" />
+              <source src={`https://mentor-server-qd42.onrender.com${resource.videoUrl}`} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           </div>
@@ -171,7 +171,7 @@ function ManageUploads() {
       case 'Article':
         return (
           <div>
-            <a href={`http://localhost:5000${resource.articleUrl}`} target="_blank" rel="noopener noreferrer">
+            <a href={`https://mentor-server-qd42.onrender.com${resource.articleUrl}`} target="_blank" rel="noopener noreferrer">
               View Article
             </a>
           </div>
@@ -185,7 +185,7 @@ function ManageUploads() {
       case 'Module':
         return (
           <div>
-            <a href={`http://localhost:5000${resource.moduleUrl}`} target="_blank" rel="noopener noreferrer">
+            <a href={`https://mentor-server-qd42.onrender.com${resource.moduleUrl}`} target="_blank" rel="noopener noreferrer">
               View Module
             </a>
             <button onClick={() => handleLearnMore(resource)} style={styles.button}>

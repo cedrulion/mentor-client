@@ -32,7 +32,7 @@ const UserDetails = () => {
     event.preventDefault();
     try {
       const token = localStorage.getItem('Token');
-      const response = await Axios.post('http://localhost:5000/api/detail/userdetail', formData, {
+      const response = await Axios.post('https://mentor-server-qd42.onrender.com/api/detail/userdetail', formData, {
         headers: {
           Authorization: `Bearer ${token}`, // Assuming 'token' is defined elsewhere
         },

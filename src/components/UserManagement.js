@@ -18,7 +18,7 @@ const UserManagement = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/detail/user/info', {
+        const response = await axios.get('https://mentor-server-qd42.onrender.com/api/detail/user/info', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUsers(response.data);
@@ -35,7 +35,7 @@ const UserManagement = () => {
 
   const handleDelete = async (userId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/detail/delete/${userId}`, {
+      await axios.delete(`https://mentor-server-qd42.onrender.com/api/detail/delete/${userId}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('Token')}` },
       });
       setUsers(users.filter(user => user._id !== userId));
@@ -47,7 +47,7 @@ const UserManagement = () => {
 
   const handleView = async (userId) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/detail/view/${userId}`, {
+      const response = await axios.get(`https://mentor-server-qd42.onrender.com/api/detail/view/${userId}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('Token')}` },
       });
       setSelectedUser(response.data);

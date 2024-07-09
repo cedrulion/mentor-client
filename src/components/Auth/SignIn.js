@@ -24,7 +24,7 @@ function SignIn() {
     try {
       setIsLoading(true);
       setError(null);
-      const response = await axios.post('http://localhost:5000/api/auth/signin', { email, password });
+      const response = await axios.post('https://mentor-server-qd42.onrender.com/api/auth/signin', { email, password });
       if (response.data && response.data.user && response.data.user.email) {
         localStorage.setItem('Profile', JSON.stringify(response.data));
       }
@@ -33,7 +33,7 @@ function SignIn() {
       console.log('Login successful! Token:', token);
 
       // Check if user has user details
-      const userDetailsResponse = await axios.get('http://localhost:5000/api/detail/getdetail', {
+      const userDetailsResponse = await axios.get('https://mentor-server-qd42.onrender.com/api/detail/getdetail', {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!userDetailsResponse.data.firstName || !userDetailsResponse.data) {

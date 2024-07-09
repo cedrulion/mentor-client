@@ -11,7 +11,7 @@ function LearnerRequest() {
     useEffect(() => {
         const fetchRequests = async () => {
             try {
-                const response = await axios.get('http://localhost:5000/api/learner-requests', {
+                const response = await axios.get('https://mentor-server-qd42.onrender.com/api/learner-requests', {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 console.log('Learner Requests:', response.data);
@@ -28,7 +28,7 @@ function LearnerRequest() {
 
     const deleteRequest = async (requestId) => {
         try {
-            await axios.delete(`http://localhost:5000/api/requests/${requestId}`, {
+            await axios.delete(`https://mentor-server-qd42.onrender.com/api/requests/${requestId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setRequests((prevRequests) => prevRequests.filter(request => request._id !== requestId));

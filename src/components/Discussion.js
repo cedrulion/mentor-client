@@ -15,7 +15,7 @@ function Discussion() {
 
   const fetchQuestions = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/questions', {
+      const response = await axios.get('https://mentor-server-qd42.onrender.com/api/questions', {
         headers: { Authorization: `Bearer ${localStorage.getItem('Token')}` },
       });
       setQuestions(response.data);
@@ -36,7 +36,7 @@ function Discussion() {
 
   const handleUpvote = async (questionId) => {
     try {
-      await axios.put(`http://localhost:5000/api/questions/upvote/${questionId}`, null, {
+      await axios.put(`https://mentor-server-qd42.onrender.com/api/questions/upvote/${questionId}`, null, {
         headers: { Authorization: `Bearer ${localStorage.getItem('Token')}` },
       });
       // Re-fetch questions after successful upvote
@@ -48,7 +48,7 @@ function Discussion() {
 
   const handleShowComments = async (questionId) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/questions/${questionId}/comments`, {
+      const response = await axios.get(`https://mentor-server-qd42.onrender.com/api/questions/${questionId}/comments`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('Token')}` },
       });
       // Update state to show comments for the clicked question
@@ -65,7 +65,7 @@ function Discussion() {
   const handleCommentSubmit = async () => {
     try {
       await axios.put(
-        `http://localhost:5000/api/questions/comment/${questionId}`,
+        `https://mentor-server-qd42.onrender.com/api/questions/comment/${questionId}`,
         { comment: message },
         {
           headers: { Authorization: `Bearer ${localStorage.getItem('Token')}` },

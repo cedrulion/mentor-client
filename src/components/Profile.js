@@ -26,7 +26,7 @@ const Profile = ({ onClose }) => {
 
   const fetchUserSkills = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/skill/${userDetail?.user}`, {
+      const response = await axios.get(`https://mentor-server-qd42.onrender.com/api/skill/${userDetail?.user}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setSkills(response.data.data);
@@ -40,7 +40,7 @@ const Profile = ({ onClose }) => {
 
   const fetchPosts = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/resources', {
+      const response = await axios.get('https://mentor-server-qd42.onrender.com/api/resources', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setPosts(response.data.reverse());
@@ -53,7 +53,7 @@ const Profile = ({ onClose }) => {
   useEffect(() => {
     const fetchUserDetail = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/detail/getdetail', {
+        const response = await axios.get('https://mentor-server-qd42.onrender.com/api/detail/getdetail', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUserDetail(response.data);
@@ -100,7 +100,7 @@ const Profile = ({ onClose }) => {
 
   const handleAddSkill = async () => {
     try {
-      await axios.post('http://localhost:5000/api/skill', {
+      await axios.post('https://mentor-server-qd42.onrender.com/api/skill', {
         userId: userDetail?.user,
         sname: newSkill.sname,
         description: newSkill.description,
@@ -117,7 +117,7 @@ const Profile = ({ onClose }) => {
 
   const handleEditSkill = async (skillId, updatedSkill) => {
     try {
-      await axios.put(`http://localhost:5000/api/skill/${skillId}`, updatedSkill, {
+      await axios.put(`https://mentor-server-qd42.onrender.com/api/skill/${skillId}`, updatedSkill, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -129,7 +129,7 @@ const Profile = ({ onClose }) => {
 
   const handleDeleteSkill = async (skillId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/skill/${skillId}`, {
+      await axios.delete(`https://mentor-server-qd42.onrender.com/api/skill/${skillId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

@@ -14,7 +14,7 @@ const MentorRequests = () => {
 
   const fetchRequests = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/requests', {
+      const response = await axios.get('https://mentor-server-qd42.onrender.com/api/requests', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setRequests(response.data);
@@ -28,7 +28,7 @@ const MentorRequests = () => {
   const updateRequestStatus = async (requestId, status) => {
     try {
       await axios.put(
-        `http://localhost:5000/api/requests/${requestId}`,
+        `https://mentor-server-qd42.onrender.com/api/requests/${requestId}`,
         { status },
         {
           headers: { Authorization: `Bearer ${token}` },

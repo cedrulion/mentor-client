@@ -42,12 +42,12 @@ const Close = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const userResponse = await axios.get('http://localhost:5000/api/detail/getdetail', {
+        const userResponse = await axios.get('https://mentor-server-qd42.onrender.com/api/detail/getdetail', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setLoggedInUser(userResponse.data);
       
-        const mentorsResponse = await axios.get('http://localhost:5000/api/detail/user/details', {
+        const mentorsResponse = await axios.get('https://mentor-server-qd42.onrender.com/api/detail/user/details', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setMentors(mentorsResponse.data);
@@ -102,7 +102,7 @@ const Close = () => {
   const sendRequest = async (mentorId) => {
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/requests/${mentorId}`,
+        `https://mentor-server-qd42.onrender.com/api/requests/${mentorId}`,
         { classType, classTime },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -116,7 +116,7 @@ const Close = () => {
 
   const viewDetail = async (userId) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/detail/user/detail/${userId}`, {
+      const response = await axios.get(`https://mentor-server-qd42.onrender.com/api/detail/user/detail/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setSelectedUser(response.data);
@@ -132,7 +132,7 @@ const Close = () => {
 
   const fetchUserExperiences = async (userId) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/experience/${userId}`, {
+      const response = await axios.get(`https://mentor-server-qd42.onrender.com/api/experience/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUserExperiences(response.data.data);

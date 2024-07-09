@@ -8,7 +8,7 @@ const ChatList = ({ onSelectChat }) => {
   useEffect(() => {
     const fetchChats = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/chats/user', {
+        const response = await axios.get('https://mentor-server-qd42.onrender.com/api/chats/user', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setChats(response.data);

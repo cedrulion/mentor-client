@@ -14,7 +14,7 @@ const Chat = () => {
       const decodedToken = jwtDecode(token);
       console.log('Decoded Token Data:', decodedToken); // Log the decoded token data
 
-      const response = await axios.get('http://localhost:5000/api/chat/mentor', {
+      const response = await axios.get('https://mentor-server-qd42.onrender.com/api/chat/mentor', {
         headers: { Authorization: `Bearer ${token}` },
       });
       setChats(response.data);
@@ -40,7 +40,7 @@ const Chat = () => {
   const handleReply = async (clientId, message) => {
     const token = localStorage.getItem('Token');
     try {
-      const response = await axios.post('http://localhost:5000/api/chat/mentor/reply', {
+      const response = await axios.post('https://mentor-server-qd42.onrender.com/api/chat/mentor/reply', {
         clientId,
         message,
       }, {

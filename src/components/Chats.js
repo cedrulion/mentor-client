@@ -9,7 +9,7 @@ function Chats({ mentorId, onClose }) {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/chats/${mentorId}`, {
+        const response = await axios.get(`https://mentor-server-qd42.onrender.com/api/chats/${mentorId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         console.log('Chat Messages:', response.data);
@@ -24,7 +24,7 @@ function Chats({ mentorId, onClose }) {
 
   const sendMessage = async () => {
     try {
-      const response = await axios.post(`http://localhost:5000/api/chats/start`, 
+      const response = await axios.post(`https://mentor-server-qd42.onrender.com/api/chats/start`, 
         { content: newMessage }, 
         { headers: { Authorization: `Bearer ${token}` } }
       );

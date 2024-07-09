@@ -14,7 +14,7 @@ function Question() {
   const handleSendQuestion = async () => {
     setLoading(true); // Set loading state while sending question
     try {
-      await axios.post('http://localhost:5000/api/questions/ask/general', { message: questionText }, {
+      await axios.post('https://mentor-server-qd42.onrender.com/api/questions/ask/general', { message: questionText }, {
         headers: { Authorization: `Bearer ${localStorage.getItem('Token')}` },
       });
       console.log('Question sent successfully');
@@ -31,7 +31,7 @@ function Question() {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/questions', {
+        const response = await axios.get('https://mentor-server-qd42.onrender.com/api/questions', {
           headers: { Authorization: `Bearer ${localStorage.getItem('Token')}` },
         });
         setQuestions(response.data);
