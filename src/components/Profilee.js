@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FiUser } from 'react-icons/fi';
@@ -9,7 +9,6 @@ Modal.setAppElement('#root');
 
 const Profilee = ({ onClose }) => {
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
   const [userDetail, setUserDetail] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [experiences, setExperiences] = useState([]);
@@ -24,7 +23,7 @@ const Profilee = ({ onClose }) => {
   const currentDate = new Date();
   const navigate = useNavigate();
 
-  const fetchUserExperiences = async () => {
+  const fetchUserExperiences = useCallback(async () => {
     try {
       const response = await axios.get(`https://mentor-server-qd42.onrender.com/api/experience/${userDetail?.user}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -35,9 +34,9 @@ const Profilee = ({ onClose }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [userDetail?.user, token]);
 
-  const fetchPosts = async () => {
+  const fetchPosts = useCallback(async () => {
     try {
       const response = await axios.get('https://mentor-server-qd42.onrender.com/api/resources', {
         headers: { Authorization: `Bearer ${token}` },
@@ -46,7 +45,7 @@ const Profilee = ({ onClose }) => {
     } catch (error) {
       console.error('Error fetching posts:', error);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     const fetchUserDetail = async () => {
@@ -70,11 +69,7 @@ const Profilee = ({ onClose }) => {
       fetchUserExperiences();
       fetchPosts();
     }
-  }, [userDetail, token]);
-
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
+  }, [userDetail, token, fetchUserExperiences, fetchPosts]);
 
   const handleItemClick = (path) => {
     navigate(path);
@@ -110,30 +105,6 @@ const Profilee = ({ onClose }) => {
       handleCloseModal();
     } catch (error) {
       console.error('Error adding experience:', error);
-    }
-  };
-
-  const handleEditExperience = async (experienceId, updatedExperience) => {
-    try {
-      await axios.put(`https://mentor-server-qd42.onrender.com/api/experience/${experienceId}`, updatedExperience, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      fetchUserExperiences();
-    } catch (error) {
-      console.error('Error editing experience:', error);
-    }
-  };
-
-  const handleDeleteExperience = async (experienceId) => {
-    try {
-      await axios.delete(`https://mentor-server-qd42.onrender.com/api/experience/${experienceId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      fetchUserExperiences();
-    } catch (error) {
-      console.error('Error deleting experience:', error);
     }
   };
 

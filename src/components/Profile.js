@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FiUser } from 'react-icons/fi';
@@ -22,7 +22,7 @@ const Profile = ({ onClose }) => {
   const currentDate = new Date();
   const navigate = useNavigate();
 
-  const fetchUserSkills = async () => {
+  const fetchUserSkills = useCallback(async () => {
     try {
       const response = await axios.get(`https://mentor-server-qd42.onrender.com/api/skill/${userDetail?.user}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -33,9 +33,9 @@ const Profile = ({ onClose }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [userDetail?.user, token]);
 
-  const fetchPosts = async () => {
+  const fetchPosts = useCallback(async () => {
     try {
       const response = await axios.get('https://mentor-server-qd42.onrender.com/api/resources', {
         headers: { Authorization: `Bearer ${token}` },
@@ -44,7 +44,7 @@ const Profile = ({ onClose }) => {
     } catch (error) {
       console.error('Error fetching posts:', error);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     const fetchUserDetail = async () => {
@@ -68,7 +68,7 @@ const Profile = ({ onClose }) => {
       fetchUserSkills();
       fetchPosts();
     }
-  }, [userDetail, token, fetchUserSkills, fetchPosts]);
+  }, [userDetail, fetchUserSkills, fetchPosts]);
 
   const handleItemClick = (path) => {
     navigate(path);
@@ -143,6 +143,7 @@ const Profile = ({ onClose }) => {
   };
 
   const formattedDate = currentDate.toLocaleString('en-US', options);
+
 
   return (
     <>

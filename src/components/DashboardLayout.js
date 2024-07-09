@@ -7,11 +7,9 @@ const DashboardLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   // const [showLogoutModal, setShowLogoutModal] = useState(false);
-  const navigate = useNavigate();
 
-  const handleItemClick = (path) => {
-    navigate(path);
-  };
+
+
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -20,11 +18,6 @@ const DashboardLayout = () => {
   // const toggleDropdown = () => {
   //   setIsDropdownOpen(!isDropdownOpen);
   // };
-
-  const handleLogout = () => {
-    localStorage.clear(); // Clear localStorage on logout
-    navigate('/signin'); // Redirect to signin page
-  };
 
   return (
     <div className="font-poppins flex min-h-screen bg-gradient-to-r from-gray-300 to-orange-200 ">

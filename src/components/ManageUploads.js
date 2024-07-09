@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Axios from 'axios';
 import Modal from './Modal'; // Ensure this component is defined
 
@@ -49,7 +49,6 @@ function ManageUploads() {
   const [file, setFile] = useState(null);
   const [resources, setResources] = useState([]);
   const [token, setToken] = useState('');
-  const [userId, setUserId] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [filterType, setFilterType] = useState('');
@@ -60,18 +59,10 @@ function ManageUploads() {
     const storedToken = localStorage.getItem('Token');
     if (storedToken) {
       setToken(storedToken);
-      const decodedToken = JSON.parse(atob(storedToken.split('.')[1]));
-      setUserId(decodedToken.userId);
     }
   }, []);
 
-  useEffect(() => {
-    if (token) {
-      fetchResources();
-    }
-  }, [token, filterType]);
-
-  const fetchResources = async () => {
+  const fetchResources = useCallback(async () => {
     try {
       setLoading(true);
       const response = await Axios.get('https://mentor-server-qd42.onrender.com/api/resources', {
@@ -83,7 +74,13 @@ function ManageUploads() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
+
+  useEffect(() => {
+    if (token) {
+      fetchResources();
+    }
+  }, [token, filterType, fetchResources]);
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
