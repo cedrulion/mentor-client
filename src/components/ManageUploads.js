@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
-import Modal from './Modal'; // Assuming Modal component is defined separately
+import Modal from './Modal'; // Ensure this component is defined
 
-// Define inline styles for CSS
 const styles = {
   button: {
     backgroundColor: '#1e90ff', /* DodgerBlue */
@@ -42,7 +41,6 @@ const styles = {
   },
 };
 
-// Main Resource Component
 function ManageUploads() {
   const [title, setTitle] = useState('');
   const [date, setDate] = useState('');
@@ -80,10 +78,10 @@ function ManageUploads() {
         headers: { Authorization: `Bearer ${token}` },
       });
       setResources(response.data);
-      setLoading(false);
     } catch (error) {
-      setLoading(false);
       setError('Error fetching resources. Please try again later.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -106,7 +104,7 @@ function ManageUploads() {
     }
 
     try {
-      const response = await Axios.post('https://mentor-server-qd42.onrender.com/api/resources', formData, {
+      await Axios.post('https://mentor-server-qd42.onrender.com/api/resources', formData, {
         headers: { Authorization: `Bearer ${token}` },
         'Content-Type': 'multipart/form-data',
       });
@@ -204,7 +202,6 @@ function ManageUploads() {
         <div className="py-3">
           <p className="text-center text-xl mb-5">Uploaded Contents</p>
           
-          {/* Type Count Cards */}
           <div className="flex justify-around">
             <div className="bg-green-300 py-2 px-5 rounded-md">
               <p>Webinar</p>
@@ -224,7 +221,6 @@ function ManageUploads() {
             </div>
           </div>
           
-          {/* Filter Buttons */}
           <div className="flex justify-center gap-8 pt-3">
             <button className={`bg-yellow-200 py-2 px-4 ${filterType === '' ? 'font-bold' : ''}`} onClick={() => setFilterType('')}>
               All

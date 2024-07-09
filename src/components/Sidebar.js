@@ -7,7 +7,7 @@ import { faUserGroup, faUser } from '@fortawesome/free-solid-svg-icons';
 
 const Sidebar = ({ onClose }) => {
   const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(false);
+  
   const [userDetail, setUserDetail] = useState(null);
   const token = localStorage.getItem('Token');
   const [userRole, setUserRole] = useState('');

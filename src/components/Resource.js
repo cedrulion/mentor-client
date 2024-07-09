@@ -67,7 +67,6 @@ function Resource() {
   const [webinarUrl, setWebinarUrl] = useState('');
   const [resources, setResources] = useState([]);
   const [token, setToken] = useState('');
-  const [userId, setUserId] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [filterType, setFilterType] = useState('');
@@ -78,8 +77,6 @@ function Resource() {
     const storedToken = localStorage.getItem('Token');
     if (storedToken) {
       setToken(storedToken);
-      const decodedToken = JSON.parse(atob(storedToken.split('.')[1]));
-      setUserId(decodedToken.userId);
     }
   }, []);
 
@@ -87,7 +84,7 @@ function Resource() {
     if (token) {
       fetchResources();
     }
-  }, [token, filterType]);
+  }, [token, filterType]); // Added filterType to the dependency array
 
   const fetchResources = async () => {
     try {
@@ -134,7 +131,7 @@ function Resource() {
     }
 
     try {
-      const response = await Axios.post('https://mentor-server-qd42.onrender.com/api/resources', formData, {
+      await Axios.post('https://mentor-server-qd42.onrender.com/api/resources', formData, {
         headers: { Authorization: `Bearer ${token}` },
         'Content-Type': 'multipart/form-data',
       });

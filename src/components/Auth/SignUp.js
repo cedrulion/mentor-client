@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaPaw, FaUser, FaEnvelope, FaLock, FaArrowLeft } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaLock, FaArrowLeft } from 'react-icons/fa';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 

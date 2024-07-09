@@ -9,21 +9,21 @@ const MentorRequests = () => {
   const token = localStorage.getItem('Token');
 
   useEffect(() => {
+    const fetchRequests = async () => {
+      try {
+        const response = await axios.get('https://mentor-server-qd42.onrender.com/api/requests', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setRequests(response.data);
+      } catch (error) {
+        console.error('Error fetching requests:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchRequests();
   }, [token]);
-
-  const fetchRequests = async () => {
-    try {
-      const response = await axios.get('https://mentor-server-qd42.onrender.com/api/requests', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setRequests(response.data);
-    } catch (error) {
-      console.error('Error fetching requests:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const updateRequestStatus = async (requestId, status) => {
     try {
@@ -48,7 +48,7 @@ const MentorRequests = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-r from-gray-300 to-orange-200 flex items-center justify-center">
-        <img src={LOGO} alt="logo" />
+        <img src={LOGO} alt="loading" />
       </div>
     );
   }

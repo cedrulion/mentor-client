@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Link,useNavigate} from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FiUser } from 'react-icons/fi';
 import Modal from 'react-modal';
-import LOGO from "../Assets/LOGO.png";
-import './Profile.css';
 import LOG from "../Assets/loading.gif";
 
 Modal.setAppElement('#root');
@@ -32,7 +30,6 @@ const Profilee = ({ onClose }) => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setExperiences(response.data.data);
-      console.log(response.data.data);
     } catch (error) {
       console.error('Error fetching user experiences:', error);
     } finally {
@@ -46,7 +43,6 @@ const Profilee = ({ onClose }) => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setPosts(response.data.reverse());
-      console.log(response.data);
     } catch (error) {
       console.error('Error fetching posts:', error);
     }
@@ -79,6 +75,7 @@ const Profilee = ({ onClose }) => {
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
+
   const handleItemClick = (path) => {
     navigate(path);
     onClose();
@@ -155,12 +152,11 @@ const Profilee = ({ onClose }) => {
   return (
     <>
       {loading ? (
-        
-       <div className="min-h-screen  bg-gradient-to-r from-gray-300 to-orange-200 flex items-center justify-center"><img src={LOG} alt="logo"  /></div>
-      
+        <div className="min-h-screen bg-gradient-to-r from-gray-300 to-orange-200 flex items-center justify-center">
+          <img src={LOG} alt="Loading..." />
+        </div>
       ) : (
-        <div className="min-h-screen items-center justify-center ml-7 bg-gradient-to-r from-gray-300 to-orange-200">
-          
+        <div className="min-h-screen flex items-center justify-center ml-7 bg-gradient-to-r from-gray-300 to-orange-200">
           <div className='flex justify-between'>
             <div className="flex-1 p-5">
               <h3 className="text-xl font-semibold text-gray-800 mb-2 pt-9">Welcome Back</h3>
@@ -174,10 +170,8 @@ const Profilee = ({ onClose }) => {
                     </div>
                   </div>
                   <div className='border-b border-gray-400'>
-                   
                     <p>{post.description}</p>
                     <p className="text-blue-500">{post.type}</p>
-
                   </div>
                 </div>
               ))}
@@ -215,12 +209,14 @@ const Profilee = ({ onClose }) => {
                 )}
                 <div className="flex justify-center mt-4">
                   <button onClick={handleOpenModal} className="bg-gradient-to-r from-violet-800 to-orange-600 text-white font-bold py-2 px-4 rounded">
-                   + Edit Profile
+                    + Edit Profile
                   </button>
                 </div>
                 <div className='m-9'>
                   <p className='p-6 font-serif font-semibold'>Messages</p>
-                <Link to='dashboard/chato'  onClick={() => handleItemClick('/dashboard/chato')}>  <button className='px-6 text-white bg-violet-900 font-serif font-semibold'>View All</button></Link>
+                  <Link to='dashboard/chato' onClick={() => handleItemClick('/dashboard/chato')}>
+                    <button className='px-6 text-white bg-violet-900 font-serif font-semibold'>View All</button>
+                  </Link>
                 </div>
               </div>
             </div>

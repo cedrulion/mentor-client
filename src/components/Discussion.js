@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Forum from './Forum';
-import { AiOutlineArrowUp } from 'react-icons/ai'; // Import upvote icon
+i
 import { FaCommentDots, FaPlusCircle, FaMinusCircle } from 'react-icons/fa'; // Import icons for comments and add
 import CommentsModal from './CommentsModal'; // Import the CommentsModal component
 

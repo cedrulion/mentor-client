@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaUserPlus, FaSearch, FaUser, FaArrowRight } from 'react-icons/fa';
+import { FaSearch, FaUser } from 'react-icons/fa';
 import { FiUser } from 'react-icons/fi';
 import LOGO from "../Assets/loading.gif";
 

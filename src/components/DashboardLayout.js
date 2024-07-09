@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { Outlet, Link, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
-import { FaBars, } from 'react-icons/fa';
-
+import { FaBars } from 'react-icons/fa';
 
 const DashboardLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  // const [showLogoutModal, setShowLogoutModal] = useState(false);
   const navigate = useNavigate();
 
   const handleItemClick = (path) => {
@@ -18,9 +17,9 @@ const DashboardLayout = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
+  // const toggleDropdown = () => {
+  //   setIsDropdownOpen(!isDropdownOpen);
+  // };
 
   const handleLogout = () => {
     localStorage.clear(); // Clear localStorage on logout
@@ -32,18 +31,15 @@ const DashboardLayout = () => {
       {isSidebarOpen && <Sidebar onClose={toggleSidebar} />}
 
       <div className={`flex-grow ${isSidebarOpen ? 'ml-56' : 'ml-0'}`}>
-      <div className="fixed top-0 m-2">
+        <div className="fixed top-0 m-2">
           <button className="text-black focus:outline-none text-lg" onClick={toggleSidebar}>
-            <FaBars  />
+            <FaBars />
           </button>
         </div>
         <div className='font-poppins'>
-          <Outlet/>
-          </div>
-      
+          <Outlet />
+        </div>
       </div>
-      
-  
     </div>
   );
 };
