@@ -46,7 +46,6 @@ function ManageUploads() {
   const [date, setDate] = useState('');
   const [description, setDescription] = useState('');
   const [type, setType] = useState('Webinar');
-  const [file, setFile] = useState(null);
   const [resources, setResources] = useState([]);
   const [token, setToken] = useState('');
   const [loading, setLoading] = useState(false);
@@ -81,43 +80,6 @@ function ManageUploads() {
       fetchResources();
     }
   }, [token, filterType, fetchResources]);
-
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    const formData = new FormData();
-    formData.append('title', title);
-    formData.append('date', date);
-    formData.append('description', description);
-    formData.append('type', type);
-    if (file) {
-      formData.append('file', file);
-    }
-
-    try {
-      await Axios.post('https://mentor-server-qd42.onrender.com/api/resources', formData, {
-        headers: { Authorization: `Bearer ${token}` },
-        'Content-Type': 'multipart/form-data',
-      });
-      setTitle('');
-      setDate('');
-      setDescription('');
-      setType('Webinar');
-      setFile(null);
-      alert('Resource created successfully!');
-      fetchResources();
-    } catch (error) {
-      setError('Error creating resource. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm('Are you sure you want to delete this resource?');

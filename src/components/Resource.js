@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Axios from 'axios';
 import Forum from './Forum';
 
@@ -49,13 +49,26 @@ const Modal = ({ onClose, resource }) => {
         <p><strong>Date:</strong> {new Date(resource.date).toLocaleString()}</p>
         <p><strong>Description:</strong> {resource.description}</p>
         <p><strong>Type:</strong> {resource.type}</p>
-
         <button onClick={onClose} style={{ ...styles.button, backgroundColor: 'red' }}>
           Close
         </button>
       </div>
     </div>
   );
+};
+
+const fetchResources = async (token, setLoading, setResources, setError) => {
+  try {
+    setLoading(true);
+    const response = await Axios.get('https://mentor-server-qd42.onrender.com/api/resources', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setResources(response.data);
+    setLoading(false);
+  } catch (error) {
+    setLoading(false);
+    setError('Error fetching resources. Please try again later.');
+  }
 };
 
 function Resource() {
@@ -80,25 +93,15 @@ function Resource() {
     }
   }, []);
 
-  useEffect(() => {
+  const fetchResourcesCallback = useCallback(() => {
     if (token) {
-      fetchResources();
+      fetchResources(token, setLoading, setResources, setError);
     }
-  }, [token, filterType]); // Added filterType to the dependency array
+  }, [token]);
 
-  const fetchResources = async () => {
-    try {
-      setLoading(true);
-      const response = await Axios.get('https://mentor-server-qd42.onrender.com/api/resources', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setResources(response.data);
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      setError('Error fetching resources. Please try again later.');
-    }
-  };
+  useEffect(() => {
+    fetchResourcesCallback();
+  }, [token, filterType, fetchResourcesCallback]); 
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -142,7 +145,7 @@ function Resource() {
       setFile(null);
       setWebinarUrl('');
       alert('Resource created successfully!');
-      fetchResources();
+      fetchResources(token, setLoading, setResources, setError);
     } catch (error) {
       setError('Error creating resource. Please try again.');
     } finally {
@@ -248,7 +251,7 @@ function Resource() {
             <button className={`bg-yellow-200 py-2 px-4 ${filterType === 'Module' ? 'font-bold' : ''}`} onClick={() => setFilterType('Module')}>
               Module
             </button>
-                        <button className={`bg-yellow-200 py-2 px-4 ${filterType === 'Article' ? 'font-bold' : ''}`} onClick={() => setFilterType('Article')}>
+            <button className={`bg-yellow-200 py-2 px-4 ${filterType === 'Article' ? 'font-bold' : ''}`} onClick={() => setFilterType('Article')}>
               Articles
             </button>
           </div>
